@@ -1,0 +1,2392 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111827">
+  <title>Fiesta de Jeff 👑</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #667085;
+      --line: #e4e7ec;
+      --paper: #fff;
+      --canvas: #f3f5f8;
+      --brand: #7c3aed;
+      --brand-dark: #5b21b6;
+      --brand-soft: #f1eafe;
+      --good: #087a55;
+      --good-soft: #e8f8f1;
+      --normal: #9a6700;
+      --normal-soft: #fff7d6;
+      --bad: #c4320a;
+      --bad-soft: #fff0eb;
+      --danger: #b42318;
+      --shadow: 0 12px 32px rgba(16, 24, 40, .08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(124, 58, 237, .09), transparent 28rem),
+        var(--canvas);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button, input, textarea { font: inherit; }
+    button { cursor: pointer; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      color: white;
+      background: rgba(17, 24, 39, .96);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 6px 18px rgba(16, 24, 40, .18);
+    }
+
+    .topbar-inner {
+      width: min(1500px, calc(100% - 32px));
+      min-height: 72px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      background: linear-gradient(145deg, #9f67ff, #6d28d9);
+      font-size: 23px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.25);
+    }
+    .brand h1 { margin: 0; font-size: clamp(17px, 2vw, 22px); letter-spacing: -.02em; }
+    .brand p { margin: 3px 0 0; color: #cbd5e1; font-size: 12px; }
+
+    .tab-nav {
+      width: min(1500px, calc(100% - 32px));
+      margin: auto;
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tab-nav::-webkit-scrollbar { display: none; }
+    .tab-button {
+      flex: 0 0 auto;
+      padding: 10px 14px 11px;
+      border: 0;
+      border-bottom: 3px solid transparent;
+      color: #cbd5e1;
+      background: transparent;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .tab-button:hover { color: white; background: rgba(255,255,255,.06); }
+    .tab-button.active { color: white; border-bottom-color: #a78bfa; }
+    .tab-panel:not(.active) { display: none !important; }
+    body.food-tab-active .airbnb-only { display: none !important; }
+
+    .top-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .btn {
+      border: 1px solid transparent;
+      border-radius: 11px;
+      padding: 10px 14px;
+      color: var(--ink);
+      background: white;
+      font-weight: 750;
+      transition: .18s ease;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(16,24,40,.12); }
+    .btn:active { transform: translateY(0); }
+    .btn.primary { color: white; background: var(--brand); }
+    .btn.primary:hover { background: var(--brand-dark); }
+    .btn.ghost { color: #e5e7eb; background: transparent; border-color: #475467; }
+    .btn.ghost:hover { background: rgba(255,255,255,.08); }
+    .btn.soft { color: var(--brand-dark); background: var(--brand-soft); border-color: #ddd0fa; }
+    .btn.soft:hover { background: #e8ddff; }
+    .btn.danger { color: #fecaca; }
+    .btn.small { padding: 8px 11px; font-size: 13px; }
+    body.read-only .edit-only { display: none !important; }
+    body.read-only .person { cursor: default; }
+    body.read-only .person:hover { transform: none; border-color: #d8cff5; }
+    body.read-only .detail-badge,
+    body.read-only .edit-feature { pointer-events: none; cursor: default; }
+    body.read-only .detail-badge:hover { box-shadow: none; }
+    body.read-only .edit-indicator { display: none; }
+    body.read-only .edit-help { display: none !important; }
+
+    .app {
+      width: min(1500px, calc(100% - 32px));
+      margin: 24px auto 44px;
+      display: grid;
+      grid-template-columns: 310px minmax(0, 1fr);
+      align-items: start;
+      gap: 22px;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 128px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .panel, .room, .bathroom {
+      background: var(--paper);
+      border: 1px solid rgba(228, 231, 236, .9);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .panel { padding: 18px; }
+    .panel-title {
+      margin: 0;
+      font-size: 17px;
+      letter-spacing: -.015em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .help { margin: 6px 0 14px; color: var(--muted); font-size: 12px; line-height: 1.45; }
+
+    .add-form { display: grid; gap: 9px; }
+    .add-form textarea {
+      width: 100%;
+      min-height: 76px;
+      resize: vertical;
+      border: 1px solid #d0d5dd;
+      border-radius: 11px;
+      padding: 11px 12px;
+      color: var(--ink);
+      background: #fff;
+      outline: none;
+      transition: .15s;
+    }
+    .add-form textarea:focus { border-color: #9b6ceb; box-shadow: 0 0 0 4px rgba(124,58,237,.11); }
+
+    .data-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    .data-actions .btn { width: 100%; }
+    .data-actions .undo-import { grid-column: 1 / -1; color: var(--muted); background: #f8fafc; border-color: var(--line); }
+    .hidden-input { display: none; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .stat {
+      padding: 10px 7px;
+      text-align: center;
+      border-radius: 12px;
+      background: #f8fafc;
+      border: 1px solid #eef0f4;
+    }
+    .stat strong { display: block; font-size: 20px; line-height: 1.15; }
+    .stat span { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .05em; }
+
+    .pool {
+      min-height: 150px;
+      padding: 10px;
+      border: 2px dashed #cfd4dc;
+      border-radius: 13px;
+      background: #f9fafb;
+      display: flex;
+      align-content: flex-start;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 8px;
+      transition: .18s ease;
+    }
+    .pool.drag-over, .bed.drag-over {
+      border-color: var(--brand);
+      background: var(--brand-soft);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(124,58,237,.14);
+    }
+    .pool.selected-target, .bed.selected-target { border-color: #a78bfa; }
+
+    .empty {
+      width: 100%;
+      align-self: center;
+      color: #98a2b3;
+      font-size: 12px;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .person {
+      max-width: 100%;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 9px 8px 10px;
+      border: 1px solid #d8cff5;
+      border-radius: 999px;
+      background: white;
+      color: #4c1d95;
+      box-shadow: 0 2px 5px rgba(16,24,40,.06);
+      font-size: 13px;
+      font-weight: 750;
+      cursor: grab;
+      user-select: none;
+      transition: .15s ease;
+    }
+    .person:hover { border-color: #a78bfa; transform: translateY(-1px); }
+    .person.dragging { opacity: .3; }
+    .person.selected { color: white; border-color: var(--brand); background: var(--brand); box-shadow: 0 0 0 4px rgba(124,58,237,.15); }
+    .person-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .remove-person, .edit-person {
+      width: 19px;
+      height: 19px;
+      display: inline-grid;
+      place-items: center;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      color: currentColor;
+      background: rgba(124,58,237,.10);
+      line-height: 1;
+      font-size: 14px;
+      font-weight: 900;
+    }
+    .edit-person { color: currentColor; background: rgba(124,58,237,.10); font-size: 11px; }
+    .person.selected .remove-person, .person.selected .edit-person { background: rgba(255,255,255,.2); }
+
+    .rooms-area { min-width: 0; }
+    .section-head {
+      margin: 0 0 14px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .section-head h2 { margin: 0; font-size: 22px; letter-spacing: -.025em; }
+    .section-head p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+    .save-indicator { color: var(--good); font-size: 12px; font-weight: 750; white-space: nowrap; }
+    .section-tools { display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+
+    .rooms-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .bathrooms-section { margin-top: 28px; }
+    .bathrooms-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .bathroom { overflow: hidden; }
+    .bathroom .room-head { border-bottom: 0; }
+    .bathroom-body {
+      min-height: 84px;
+      padding: 16px 18px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .bathroom-empty {
+      padding: 22px;
+      border: 2px dashed #cfd4dc;
+      border-radius: var(--radius);
+      color: var(--muted);
+      background: rgba(255,255,255,.55);
+      text-align: center;
+      grid-column: 1 / -1;
+    }
+
+    .food-page {
+      width: min(1100px, calc(100% - 32px));
+      margin: 24px auto 44px;
+    }
+    .food-hero {
+      margin-bottom: 18px;
+      padding: 22px;
+      border-radius: var(--radius);
+      color: white;
+      background: linear-gradient(135deg, #5b21b6, #8b5cf6);
+      box-shadow: var(--shadow);
+    }
+    .food-hero h2 { margin: 0; font-size: clamp(22px, 4vw, 30px); }
+    .food-hero p { margin: 7px 0 0; color: #ede9fe; font-size: 13px; line-height: 1.5; }
+    .meal-days { display: grid; gap: 18px; }
+    .meal-day {
+      overflow: hidden;
+      background: var(--paper);
+      border: 1px solid rgba(228, 231, 236, .9);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .meal-day-head {
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(135deg, #fff, #faf9ff);
+    }
+    .meal-day-head h3 { margin: 0; font-size: 18px; }
+    .meal-list { padding: 14px 18px 18px; display: grid; gap: 10px; }
+    .meal-group {
+      overflow: hidden;
+      border: 1px solid #d9d2e8;
+      border-radius: 14px;
+      background: #fcfbff;
+    }
+    .meal-group-head {
+      padding: 12px 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid #e7e3f1;
+      background: #f7f3ff;
+    }
+    .meal-group-head .meal-name { font-size: 14px; }
+    .meal-items { padding: 10px; display: grid; gap: 8px; }
+    .meal-item {
+      padding: 13px 14px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      border: 1px solid #e7e3f1;
+      border-radius: 13px;
+      background: #fcfbff;
+    }
+    .meal-item-main { min-width: 0; }
+    .meal-name { margin: 0; color: var(--brand-dark); font-size: 13px; font-weight: 850; }
+    .meal-description { margin: 4px 0 0; color: var(--muted); font-size: 13px; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .meal-actions { display: flex; gap: 5px; flex-wrap: wrap; flex-shrink: 0; }
+    .meal-empty {
+      padding: 18px;
+      border: 2px dashed #d8cff5;
+      border-radius: 13px;
+      color: var(--muted);
+      background: #faf8ff;
+      text-align: center;
+      font-size: 13px;
+    }
+    .activities-hero { background: linear-gradient(135deg, #047857, #10b981); }
+    .activities-hero p { color: #d1fae5; }
+    .activities-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .activity-card {
+      padding: 16px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      background: var(--paper);
+      border: 1px solid rgba(228, 231, 236, .9);
+      border-radius: 15px;
+      box-shadow: var(--shadow);
+    }
+    .activity-card h3 { margin: 0; font-size: 16px; }
+    .activity-card p { margin: 5px 0 0; color: var(--muted); font-size: 13px; line-height: 1.45; white-space: pre-wrap; }
+    .room { overflow: hidden; }
+    .room-head {
+      min-height: 92px;
+      padding: 17px 18px 15px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(135deg, #fff, #faf9ff);
+    }
+    .room-title-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .room-title { margin: 0; font-size: 18px; letter-spacing: -.02em; }
+    .room-actions { display: flex; align-items: center; gap: 5px; }
+    .icon-btn {
+      width: 28px;
+      height: 28px;
+      display: inline-grid;
+      place-items: center;
+      padding: 0;
+      border: 1px solid #d9dce3;
+      border-radius: 8px;
+      color: #667085;
+      background: white;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .icon-btn:hover { color: var(--brand-dark); border-color: #b9a2ed; background: var(--brand-soft); }
+    .icon-btn:disabled { opacity: .35; cursor: not-allowed; }
+    .room-count { color: var(--muted); font-size: 12px; font-weight: 750; }
+    .badges { margin-top: 11px; display: flex; gap: 7px; flex-wrap: wrap; }
+    body.room-details-hidden .badges { display: none; }
+    body.room-details-hidden .room-head { min-height: auto; }
+    .badge { max-width: 100%; padding: 5px 8px; border-radius: 999px; font-size: 11px; font-weight: 800; overflow-wrap: anywhere; }
+    .badge.good { color: var(--good); background: var(--good-soft); }
+    .badge.normal { color: var(--normal); background: var(--normal-soft); }
+    .badge.bad { color: var(--bad); background: var(--bad-soft); }
+    .badge.custom { display: inline-flex; align-items: center; gap: 6px; color: #344054; background: #eef2f6; }
+    .badge.detail-feature { display: inline-flex; align-items: center; gap: 6px; }
+    .badge.good, .badge.normal, .badge.bad, .badge.custom, .badge.detail-feature, .detail-badge {
+      color: var(--good);
+      background: var(--good-soft);
+    }
+    .detail-badge { border: 0; cursor: pointer; }
+    .detail-badge:hover { box-shadow: inset 0 0 0 1px currentColor; }
+    .edit-feature { border: 0; color: inherit; background: transparent; padding: 0; font: inherit; font-weight: inherit; cursor: pointer; }
+    .remove-feature {
+      width: 17px;
+      height: 17px;
+      display: inline-grid;
+      place-items: center;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      color: #667085;
+      background: rgba(52, 64, 84, .10);
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .remove-feature:hover { color: white; background: var(--danger); }
+    .add-feature {
+      padding: 5px 8px;
+      border: 1px dashed #a78bfa;
+      border-radius: 999px;
+      color: var(--brand-dark);
+      background: #fff;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .add-feature:hover { background: var(--brand-soft); }
+
+    .beds {
+      padding: 16px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 11px;
+    }
+    .bed {
+      min-height: 112px;
+      position: relative;
+      padding: 11px;
+      border: 2px dashed #d6dae1;
+      border-radius: 14px;
+      background: #fbfcfe;
+      transition: .18s ease;
+    }
+    .bed.full { border-style: solid; border-color: #c7b6ef; background: #faf8ff; }
+    .bed.shake { animation: shake .28s linear; }
+    @keyframes shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+    .bed-top { margin-bottom: 11px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .bed-label { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 850; }
+    .bed-label span:first-child { font-size: 19px; }
+    .bed-meta { display: flex; align-items: center; gap: 5px; }
+    .bed-action {
+      width: 22px;
+      height: 22px;
+      display: inline-grid;
+      place-items: center;
+      padding: 0;
+      border: 0;
+      border-radius: 6px;
+      color: #667085;
+      background: #eceff3;
+      font-size: 10px;
+      font-weight: 900;
+    }
+    .bed-action:hover { color: var(--brand-dark); background: #e6dcfa; }
+    .bed-action.delete:hover { color: white; background: var(--danger); }
+    .capacity {
+      min-width: 31px;
+      padding: 4px 6px;
+      border-radius: 999px;
+      color: var(--muted);
+      background: #eef1f5;
+      font-size: 10px;
+      font-weight: 850;
+      text-align: center;
+    }
+    .bed-people { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 7px; }
+    .bed .empty { margin-top: 10px; }
+    .add-bed {
+      min-height: 48px;
+      grid-column: 1 / -1;
+      border: 2px dashed #c9b8ee;
+      border-radius: 13px;
+      color: var(--brand-dark);
+      background: #faf8ff;
+      font-size: 12px;
+      font-weight: 850;
+    }
+    .add-bed:hover { border-color: var(--brand); background: var(--brand-soft); }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      z-index: 50;
+      max-width: min(480px, calc(100% - 32px));
+      padding: 12px 16px;
+      border-radius: 12px;
+      color: white;
+      background: #172033;
+      box-shadow: 0 12px 32px rgba(16,24,40,.24);
+      font-size: 13px;
+      font-weight: 700;
+      opacity: 0;
+      transform: translate(-50%, 20px);
+      pointer-events: none;
+      transition: .22s ease;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    .selection-tip {
+      display: none;
+      margin: 0 0 14px;
+      padding: 10px 12px;
+      border-radius: 11px;
+      color: #5b21b6;
+      background: var(--brand-soft);
+      font-size: 12px;
+      font-weight: 750;
+    }
+    .selection-tip.show { display: block; }
+
+    @media (max-width: 1050px) {
+      .app { grid-template-columns: 270px minmax(0, 1fr); }
+      .rooms-grid, .bathrooms-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 760px) {
+      body { overflow-x: hidden; }
+      .topbar-inner { width: min(100% - 22px, 1500px); min-height: 66px; padding: 8px 0; gap: 8px; }
+      .tab-nav { width: min(100% - 22px, 1500px); }
+      .brand { min-width: 0; gap: 9px; }
+      .brand h1 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .brand p { display: none; }
+      .top-actions { flex-wrap: nowrap; flex-shrink: 0; }
+      .top-actions .copy-label { display: none; }
+      .app { width: min(100% - 22px, 1500px); margin-top: 14px; grid-template-columns: 1fr; }
+      .food-page { width: min(100% - 22px, 1100px); margin-top: 14px; }
+      .sidebar { position: static; }
+      .rooms-grid, .bathrooms-grid { grid-template-columns: 1fr; }
+      .section-head { display: block; }
+      .section-tools { width: 100%; margin-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+      .section-tools .btn { width: 100%; min-height: 42px; white-space: normal; }
+      .section-tools .save-indicator { grid-column: 1 / -1; text-align: right; }
+      .panel { padding: 15px; }
+      .room { min-width: 0; }
+      .room-head { padding: 15px; }
+      .room-title-row { align-items: flex-start; flex-wrap: wrap; }
+      .room-title { min-width: 0; flex: 1 1 180px; overflow-wrap: anywhere; }
+      .room-actions { flex-shrink: 0; }
+      .beds { padding: 13px; gap: 10px; }
+      .bed { min-width: 0; }
+      .bed-label { min-width: 0; flex: 1; }
+      .bed-label span:last-child { overflow-wrap: anywhere; }
+      .bed-meta { flex-shrink: 0; }
+      .person { touch-action: manipulation; }
+      .person-name { min-width: 0; flex: 1; }
+      .bed .person { width: 100%; }
+      .data-actions .btn { min-height: 42px; }
+      .add-form textarea { font-size: 16px; }
+      .pool { min-height: 110px; }
+    }
+    @media (max-width: 470px) {
+      .topbar-inner { width: calc(100% - 16px); }
+      .tab-nav { width: calc(100% - 16px); }
+      .brand-icon { width: 36px; height: 36px; font-size: 19px; }
+      .brand h1 { font-size: 15px; }
+      .top-actions .btn { min-width: 40px; min-height: 40px; padding: 8px; }
+      .top-actions .clear-btn { display: none; }
+      .app { width: calc(100% - 16px); gap: 14px; }
+      .food-page { width: calc(100% - 16px); }
+      .food-hero { padding: 18px; }
+      .meal-day-head { align-items: flex-start; flex-wrap: wrap; padding: 14px; }
+      .meal-day-head .room-actions { width: 100%; justify-content: flex-end; }
+      .meal-list { padding: 12px; }
+      .meal-item { align-items: stretch; flex-direction: column; }
+      .meal-actions { justify-content: flex-end; }
+      .meal-group-head { align-items: flex-start; flex-direction: column; }
+      .meal-group-head .meal-actions { width: 100%; justify-content: flex-end; }
+      .activities-list { grid-template-columns: 1fr; }
+      .activity-card { align-items: stretch; flex-direction: column; }
+      .panel { padding: 13px; border-radius: 15px; }
+      .stats { gap: 5px; }
+      .stat { padding: 9px 4px; }
+      .stat strong { font-size: 18px; }
+      .section-head h2 { font-size: 20px; }
+      .section-tools { grid-template-columns: 1fr; }
+      .room-head { padding: 13px; }
+      .room-title-row { gap: 9px; }
+      .room-title { flex-basis: 100%; font-size: 17px; }
+      .room-actions { width: 100%; justify-content: flex-end; }
+      .room-actions .room-count { margin-right: auto; align-self: center; }
+      .icon-btn { width: 38px; height: 38px; }
+      .badges { gap: 6px; }
+      .badge.custom { width: 100%; }
+      .edit-feature { min-width: 0; flex: 1; overflow-wrap: anywhere; text-align: left; }
+      .add-feature { width: 100%; min-height: 38px; }
+      .beds { grid-template-columns: 1fr; }
+      .bed { min-height: 102px; }
+      .bed-action { width: 32px; height: 32px; }
+      .capacity { padding-block: 6px; }
+      .person { min-height: 44px; padding-block: 9px; }
+      .remove-person, .edit-person { width: 27px; height: 27px; }
+      .add-bed { min-height: 52px; }
+      .toast { bottom: 14px; }
+    }
+    @media (pointer: coarse) {
+      button, .person, .dropzone { -webkit-tap-highlight-color: transparent; }
+      .btn { min-height: 42px; }
+      .icon-btn { width: 38px; height: 38px; }
+      .detail-badge { min-height: 36px; }
+    }
+    @media print {
+      body { background: white; }
+      .topbar, .sidebar, .save-indicator, .selection-tip { display: none !important; }
+      .app { display: block; width: 100%; margin: 0; }
+      .food-page { width: 100%; margin: 0; }
+      .rooms-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .bathrooms-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .room, .bathroom { break-inside: avoid; box-shadow: none; }
+      .person { box-shadow: none; }
+      .edit-only, .remove-person, .edit-person, .empty { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">👑</div>
+        <div>
+          <h1>Fiesta de Jeff</h1>
+          <p class="edit-help" id="brandSubtitle">Organiza todos los detalles de la fiesta</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="btn ghost small" id="copySummary"><span aria-hidden="true">⧉</span> <span class="copy-label">Copiar resumen</span></button>
+        <button class="btn ghost small clear-btn edit-only airbnb-only" id="clearAssignments">Desasignar todos</button>
+      </div>
+    </div>
+    <nav class="tab-nav" role="tablist" aria-label="Secciones de la fiesta">
+      <button class="tab-button active" type="button" role="tab" aria-selected="true" aria-controls="airbnbTab" data-tab="airbnb">🏠 Distribución Airbnb</button>
+      <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="foodTab" data-tab="food">🍽️ Comidas</button>
+      <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="activitiesTab" data-tab="activities">🎉 Actividades</button>
+    </nav>
+  </header>
+
+  <main class="app tab-panel active" id="airbnbTab" role="tabpanel">
+    <aside class="sidebar">
+      <section class="panel edit-only">
+        <h2 class="panel-title">Agregar personas</h2>
+        <p class="help">Puedes escribir un nombre por línea o separarlos con comas.</p>
+        <form class="add-form" id="addForm">
+          <textarea id="nameInput" placeholder="Ejemplo:&#10;Jefferson&#10;María&#10;Carlos" aria-label="Nombres de personas"></textarea>
+          <button class="btn primary" type="submit">+ Agregar</button>
+        </form>
+      </section>
+
+      <section class="panel edit-only">
+        <h2 class="panel-title">Importar y exportar</h2>
+        <p class="help">Guarda una copia completa de la fiesta o restáurala en otro navegador.</p>
+        <div class="data-actions">
+          <button class="btn soft small" type="button" id="exportData">↓ Exportar</button>
+          <button class="btn soft small edit-only" type="button" id="importData">↑ Importar</button>
+          <button class="btn small undo-import edit-only" type="button" id="undoImport" hidden>↶ Deshacer última importación</button>
+        </div>
+        <input class="hidden-input" type="file" id="importFile" accept="application/json,.json">
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">Resumen</h2>
+        <p class="help" id="capacitySummary">La casa tiene 24 espacios distribuidos en 14 camas.</p>
+        <div class="stats">
+          <div class="stat"><strong id="totalPeople">0</strong><span>Personas</span></div>
+          <div class="stat"><strong id="assignedPeople">0</strong><span>Asignadas</span></div>
+          <div class="stat"><strong id="availableSpaces">24</strong><span>Espacios</span></div>
+        </div>
+      </section>
+
+      <section class="panel edit-only">
+        <h2 class="panel-title">Sin asignar <span class="room-count" id="poolCount">0</span></h2>
+        <p class="help edit-help" id="poolHelp">Arrastra desde aquí o toca un nombre y después una cama.</p>
+        <div class="pool dropzone" id="unassignedPool" data-location="unassigned" aria-label="Personas sin asignar"></div>
+      </section>
+    </aside>
+
+    <section class="rooms-area">
+      <div class="section-head">
+        <div>
+          <h2>Habitaciones</h2>
+          <p class="edit-help">Las camas llenas se marcarán automáticamente.</p>
+        </div>
+        <div class="section-tools">
+          <button class="btn soft small" type="button" id="toggleReadOnly">Activar solo lectura</button>
+          <button class="btn soft small" type="button" id="toggleRoomDetails">Ocultar características</button>
+          <div class="save-indicator" id="saveIndicator">✓ Guardado automáticamente</div>
+        </div>
+      </div>
+      <div class="selection-tip" id="selectionTip">Persona seleccionada. Ahora toca la cama donde deseas colocarla, o “Sin asignar” para sacarla.</div>
+      <div class="rooms-grid" id="roomsGrid"></div>
+
+      <section class="bathrooms-section">
+        <div class="section-head">
+          <div>
+            <h2>Baños compartidos <span class="room-count" id="bathroomCount">0</span></h2>
+            <p class="edit-help">Registra cada baño o ducha compartida indicando solamente su tipo y ubicación.</p>
+          </div>
+          <div class="section-tools">
+            <button class="btn soft small edit-only" type="button" id="addBathroom">+ Agregar baño o ducha</button>
+          </div>
+        </div>
+        <div class="bathrooms-grid" id="bathroomsGrid"></div>
+      </section>
+    </section>
+  </main>
+
+  <main class="food-page tab-panel" id="foodTab" role="tabpanel" hidden>
+    <section class="food-hero">
+      <h2>🍽️ Menú de comidas</h2>
+      <p class="edit-help">Organiza qué se va a servir en cada día o momento de la fiesta.</p>
+    </section>
+    <div class="section-head">
+      <div>
+        <h2>Menú</h2>
+        <p class="edit-help">Crea días o secciones y agrega sus comidas.</p>
+      </div>
+      <div class="section-tools">
+        <button class="btn soft small" type="button" id="foodToggleReadOnly">Activar solo lectura</button>
+        <button class="btn soft small edit-only" type="button" id="foodExportData">↓ Exportar todo</button>
+        <button class="btn soft small edit-only" type="button" id="foodImportData">↑ Importar</button>
+        <button class="btn primary small edit-only" type="button" id="addMealDay">+ Agregar día o sección</button>
+      </div>
+    </div>
+    <div class="meal-days" id="mealDays"></div>
+  </main>
+
+  <main class="food-page tab-panel" id="activitiesTab" role="tabpanel" hidden>
+    <section class="food-hero activities-hero">
+      <h2>🎉 Actividades</h2>
+      <p class="edit-help">Agrega todo lo que podrán hacer durante la fiesta.</p>
+    </section>
+    <div class="section-head">
+      <div>
+        <h2>Actividades generales</h2>
+        <p class="edit-help">Por ejemplo: Juegos de Mesa, Karaoke, Piscina o cualquier otra actividad.</p>
+      </div>
+      <div class="section-tools">
+        <button class="btn soft small" type="button" id="activitiesToggleReadOnly">Activar solo lectura</button>
+        <button class="btn soft small edit-only" type="button" id="activitiesExportData">↓ Exportar todo</button>
+        <button class="btn soft small edit-only" type="button" id="activitiesImportData">↑ Importar</button>
+        <button class="btn primary small edit-only" type="button" id="addActivity">+ Agregar actividad</button>
+      </div>
+    </div>
+    <div class="activities-list" id="activitiesList"></div>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const STORAGE_KEY = 'airbnb-room-planner-v1';
+      const BACKUP_KEY = 'airbnb-room-planner-before-import-v1';
+      const DEFAULT_ROOMS = [
+        { id: 'r1', number: 1, name: 'Cuarto #1', comfort: 'Baja', location: 'Mala', beds: [
+          { id: 'r1-b1', label: 'Cama doble', type: 'double', capacity: 2 }
+        ]},
+        { id: 'r2', number: 2, name: 'Cuarto #2', comfort: 'Normal', location: 'Normal', beds: [
+          { id: 'r2-b1', label: 'Cama doble', type: 'double', capacity: 2 }
+        ]},
+        { id: 'r3', number: 3, name: 'Cuarto #3', comfort: 'Alta', location: 'Buena', beds: [
+          { id: 'r3-b1', label: 'Cama doble', type: 'double', capacity: 2 }
+        ]},
+        { id: 'r4', number: 4, name: 'Cuarto #4', comfort: 'Alta', location: 'Buena', beds: [
+          { id: 'r4-b1', label: 'Cama Queen', type: 'queen', capacity: 2 },
+          { id: 'r4-b2', label: 'Cama doble', type: 'double', capacity: 2 },
+          { id: 'r4-b3', label: 'Cama single', type: 'single', capacity: 1 }
+        ]},
+        { id: 'r5', number: 5, name: 'Cuarto #5', comfort: 'Baja', location: 'Buena', beds: [
+          { id: 'r5-b1', label: 'Cama doble 1', type: 'double', capacity: 2 },
+          { id: 'r5-b2', label: 'Cama doble 2', type: 'double', capacity: 2 },
+          { id: 'r5-b3', label: 'Cama single 1', type: 'single', capacity: 1 },
+          { id: 'r5-b4', label: 'Cama single 2', type: 'single', capacity: 1 },
+          { id: 'r5-b5', label: 'Cama single 3', type: 'single', capacity: 1 },
+          { id: 'r5-b6', label: 'Cama single 4', type: 'single', capacity: 1 }
+        ]},
+        { id: 'r6', number: 6, name: 'Cuarto #6', comfort: 'Alta', location: 'Buena', beds: [
+          { id: 'r6-b1', label: 'Cama doble 1', type: 'double', capacity: 2 },
+          { id: 'r6-b2', label: 'Cama doble 2', type: 'double', capacity: 2 },
+          { id: 'r6-b3', label: 'Cama single', type: 'single', capacity: 1 }
+        ]}
+      ];
+      const DEFAULT_BATHROOMS = [];
+      const DEFAULT_MEAL_DAYS = [];
+      const DEFAULT_ACTIVITIES = [];
+
+      let activeTab = window.location.hash === '#comidas'
+        ? 'food'
+        : (window.location.hash === '#actividades' ? 'activities' : 'airbnb');
+      let state = loadState();
+      let draggedPersonId = null;
+      let selectedPersonId = null;
+      let toastTimer = null;
+
+      const roomsGrid = document.getElementById('roomsGrid');
+      const bathroomsGrid = document.getElementById('bathroomsGrid');
+      const mealDaysGrid = document.getElementById('mealDays');
+      const activitiesList = document.getElementById('activitiesList');
+      const pool = document.getElementById('unassignedPool');
+      const selectionTip = document.getElementById('selectionTip');
+
+      function getAllBeds(roomList = state.rooms) {
+        return roomList.flatMap(room => room.beds.map(bed => ({ ...bed, roomId: room.id, roomName: room.name })));
+      }
+
+      function normalizeRooms(source) {
+        if (!Array.isArray(source)) return JSON.parse(JSON.stringify(DEFAULT_ROOMS));
+        const defaultsById = new Map(DEFAULT_ROOMS.map(room => [room.id, room]));
+        const usedRoomIds = new Set();
+        const usedBedIds = new Set();
+        const result = [];
+
+        source.forEach(candidate => {
+          const fallback = defaultsById.get(candidate?.id);
+          if (!fallback || usedRoomIds.has(fallback.id)) return;
+          usedRoomIds.add(fallback.id);
+          const bedsSource = Array.isArray(candidate.beds) ? candidate.beds : fallback.beds;
+          const beds = bedsSource.map((bed, index) => {
+            let id = typeof bed?.id === 'string' && bed.id ? bed.id : `${fallback.id}-bed-${makeId()}`;
+            if (usedBedIds.has(id)) id = `${fallback.id}-bed-${makeId()}`;
+            usedBedIds.add(id);
+            const capacity = Math.min(4, Math.max(1, Number.parseInt(bed?.capacity, 10) || 1));
+            return {
+              id,
+              label: typeof bed?.label === 'string' && bed.label.trim() ? bed.label.trim().replace(/\s+/g, ' ') : `Cama ${index + 1}`,
+              type: ['single', 'double', 'queen'].includes(bed?.type) ? bed.type : (capacity === 1 ? 'single' : 'double'),
+              capacity
+            };
+          });
+          result.push({
+            id: fallback.id,
+            number: fallback.number,
+            name: typeof candidate.name === 'string' && candidate.name.trim() ? candidate.name.trim().replace(/\s+/g, ' ') : fallback.name,
+            comfort: typeof candidate.comfort === 'string' && candidate.comfort.trim() ? candidate.comfort.trim().replace(/\s+/g, ' ') : fallback.comfort,
+            location: typeof candidate.location === 'string' && candidate.location.trim() ? candidate.location.trim().replace(/\s+/g, ' ') : fallback.location,
+            hiddenDetails: Array.isArray(candidate.hiddenDetails)
+              ? candidate.hiddenDetails.filter(field => ['comfort', 'location'].includes(field))
+              : [],
+            beds
+          });
+        });
+
+        DEFAULT_ROOMS.forEach(room => {
+          if (usedRoomIds.has(room.id)) return;
+          const clone = JSON.parse(JSON.stringify(room));
+          clone.beds.forEach(bed => {
+            if (usedBedIds.has(bed.id)) bed.id = `${clone.id}-bed-${makeId()}`;
+            usedBedIds.add(bed.id);
+          });
+          result.push(clone);
+        });
+        return result;
+      }
+
+      function loadState() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+          if (!saved || !Array.isArray(saved.people)) throw new Error('Estado inválido');
+          const savedRooms = normalizeRooms(saved.rooms);
+          const savedBeds = getAllBeds(savedRooms);
+          return {
+            rooms: savedRooms,
+            bathrooms: normalizeBathrooms(saved.bathrooms),
+            mealDays: normalizeMealDays(saved.mealDays),
+            activities: normalizeActivities(saved.activities),
+            people: saved.people
+              .filter(person => person && person.id && person.name)
+              .map(person => ({
+                id: String(person.id),
+                name: String(person.name),
+                location: savedBeds.some(bed => bed.id === person.location) ? person.location : 'unassigned'
+              })),
+            readOnly: saved.readOnly === true,
+            showRoomDetails: saved.showRoomDetails !== false,
+            customRoomFeatures: normalizeCustomRoomFeatures(saved.customRoomFeatures, savedRooms)
+          };
+        } catch (_) {
+          const defaultRooms = normalizeRooms();
+          return { rooms: defaultRooms, bathrooms: [], mealDays: [], activities: [], people: [], readOnly: false, showRoomDetails: true, customRoomFeatures: normalizeCustomRoomFeatures({}, defaultRooms) };
+        }
+      }
+
+      function normalizeCustomRoomFeatures(source = {}, roomList = state?.rooms || DEFAULT_ROOMS) {
+        const normalized = {};
+        roomList.forEach(room => {
+          const roomFeatures = Array.isArray(source?.[room.id]) ? source[room.id] : [];
+          const usedIds = new Set();
+          normalized[room.id] = roomFeatures
+            .filter(feature => feature && typeof feature.label === 'string' && feature.label.trim())
+            .map(feature => {
+              let id = typeof feature.id === 'string' && feature.id ? feature.id : makeId();
+              if (usedIds.has(id)) id = makeId();
+              usedIds.add(id);
+              return {
+                id,
+                label: feature.label.trim().replace(/\s+/g, ' '),
+                value: typeof feature.value === 'string' ? feature.value.trim().replace(/\s+/g, ' ') : ''
+              };
+            });
+        });
+        return normalized;
+      }
+
+      function normalizeBathrooms(source) {
+        if (!Array.isArray(source)) return JSON.parse(JSON.stringify(DEFAULT_BATHROOMS));
+        const usedIds = new Set();
+        return source
+          .filter(item => item && typeof item === 'object')
+          .map((bathroom, index) => {
+            let id = typeof bathroom.id === 'string' && bathroom.id ? bathroom.id : `bathroom-${makeId()}`;
+            if (usedIds.has(id)) id = `bathroom-${makeId()}`;
+            usedIds.add(id);
+            const legacyType = Array.isArray(bathroom.features)
+              ? bathroom.features.find(feature => String(feature?.label || '').trim().toLocaleLowerCase('es') === 'tipo')?.value
+              : '';
+            const nameSuggestsShower = String(bathroom.name || '').toLocaleLowerCase('es').includes('ducha');
+            return {
+              id,
+              type: typeof bathroom.type === 'string' && bathroom.type.trim()
+                ? bathroom.type.trim().replace(/\s+/g, ' ')
+                : (legacyType ? String(legacyType).trim().replace(/\s+/g, ' ') : (nameSuggestsShower ? 'Ducha' : `Baño ${index + 1}`)),
+              location: typeof bathroom.location === 'string' && bathroom.location.trim() ? bathroom.location.trim().replace(/\s+/g, ' ') : 'Sin definir'
+            };
+          });
+      }
+
+      function normalizeMealDays(source) {
+        if (!Array.isArray(source)) return JSON.parse(JSON.stringify(DEFAULT_MEAL_DAYS));
+        const usedDayIds = new Set();
+        const usedMealIds = new Set();
+        const usedItemIds = new Set();
+        return source
+          .filter(item => item && typeof item === 'object')
+          .map((day, dayIndex) => {
+            let id = typeof day.id === 'string' && day.id ? day.id : `meal-day-${makeId()}`;
+            if (usedDayIds.has(id)) id = `meal-day-${makeId()}`;
+            usedDayIds.add(id);
+            const mealsSource = Array.isArray(day.meals) ? day.meals : [];
+            const meals = mealsSource
+              .filter(meal => meal && typeof meal === 'object')
+              .map((meal, mealIndex) => {
+                let mealId = typeof meal.id === 'string' && meal.id ? meal.id : `meal-${makeId()}`;
+                if (usedMealIds.has(mealId)) mealId = `meal-${makeId()}`;
+                usedMealIds.add(mealId);
+                const rawItems = Array.isArray(meal.items)
+                  ? meal.items
+                  : (typeof meal.description === 'string' && meal.description.trim() ? [{ name: meal.description.trim() }] : []);
+                const items = rawItems
+                  .filter(item => (typeof item === 'string' && item.trim()) || (item && typeof item === 'object' && typeof item.name === 'string' && item.name.trim()))
+                  .map(item => {
+                    const itemObject = typeof item === 'string' ? { name: item } : item;
+                    let itemId = typeof itemObject.id === 'string' && itemObject.id ? itemObject.id : `meal-item-${makeId()}`;
+                    if (usedItemIds.has(itemId)) itemId = `meal-item-${makeId()}`;
+                    usedItemIds.add(itemId);
+                    return { id: itemId, name: itemObject.name.trim().replace(/\s+/g, ' ') };
+                  });
+                return {
+                  id: mealId,
+                  name: typeof meal.name === 'string' && meal.name.trim() ? meal.name.trim().replace(/\s+/g, ' ') : `Comida ${mealIndex + 1}`,
+                  items
+                };
+              });
+            return {
+              id,
+              name: typeof day.name === 'string' && day.name.trim() ? day.name.trim().replace(/\s+/g, ' ') : `Día o sección ${dayIndex + 1}`,
+              meals
+            };
+          });
+      }
+
+      function normalizeActivities(source) {
+        if (!Array.isArray(source)) return JSON.parse(JSON.stringify(DEFAULT_ACTIVITIES));
+        const usedIds = new Set();
+        return source
+          .filter(activity => activity && typeof activity.name === 'string' && activity.name.trim())
+          .map(activity => {
+            let id = typeof activity.id === 'string' && activity.id ? activity.id : `activity-${makeId()}`;
+            if (usedIds.has(id)) id = `activity-${makeId()}`;
+            usedIds.add(id);
+            return {
+              id,
+              name: activity.name.trim().replace(/\s+/g, ' '),
+              details: typeof activity.details === 'string' ? activity.details.trim() : ''
+            };
+          });
+      }
+
+      function saveState() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        const indicator = document.getElementById('saveIndicator');
+        indicator.textContent = 'Guardando…';
+        clearTimeout(saveState.timer);
+        saveState.timer = setTimeout(() => { indicator.textContent = '✓ Guardado automáticamente'; }, 350);
+      }
+
+      function escapeHtml(value) {
+        return String(value).replace(/[&<>'"]/g, character => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+        })[character]);
+      }
+
+      function qualityClass(value) {
+        if (value === 'Alta' || value === 'Buena') return 'good';
+        if (value === 'Normal') return 'normal';
+        return 'bad';
+      }
+
+      function bedIcon(type) {
+        return type === 'single' ? '▱' : '▰';
+      }
+
+      function peopleAt(location) {
+        return state.people.filter(person => person.location === location);
+      }
+
+      function personHtml(person) {
+        const selected = person.id === selectedPersonId ? ' selected' : '';
+        return `
+          <div class="person${selected}" draggable="${state.readOnly ? 'false' : 'true'}" data-person-id="${escapeHtml(person.id)}" title="${state.readOnly ? escapeHtml(person.name) : 'Arrastrar o tocar para seleccionar'}">
+            <span aria-hidden="true">⋮⋮</span>
+            <span class="person-name">${escapeHtml(person.name)}</span>
+            <button class="edit-person edit-only" type="button" data-edit-person-id="${escapeHtml(person.id)}" title="Editar nombre" aria-label="Editar nombre de ${escapeHtml(person.name)}">✎</button>
+            <button class="remove-person edit-only" type="button" data-remove-id="${escapeHtml(person.id)}" title="Eliminar a ${escapeHtml(person.name)}" aria-label="Eliminar a ${escapeHtml(person.name)}">×</button>
+          </div>`;
+      }
+
+      function renderRooms() {
+        roomsGrid.innerHTML = state.rooms.map((room, roomIndex) => {
+          const roomCapacity = room.beds.reduce((sum, bed) => sum + bed.capacity, 0);
+          const roomPeople = room.beds.reduce((sum, bed) => sum + peopleAt(bed.id).length, 0);
+          const customFeatures = state.customRoomFeatures?.[room.id] || [];
+          const customFeaturesHtml = customFeatures.map(feature => `
+            <span class="badge custom">
+              <button class="edit-feature" type="button" data-room-id="${room.id}" data-edit-feature-id="${escapeHtml(feature.id)}" title="Editar característica">${escapeHtml(feature.label)}${feature.value ? `: ${escapeHtml(feature.value)}` : ''}</button>
+              <button class="remove-feature edit-only" type="button" data-room-id="${room.id}" data-remove-feature-id="${escapeHtml(feature.id)}" title="Eliminar característica" aria-label="Eliminar ${escapeHtml(feature.label)}">×</button>
+            </span>`).join('');
+          const hiddenDetails = new Set(room.hiddenDetails || []);
+          const comfortHtml = hiddenDetails.has('comfort') ? '' : `
+            <span class="badge detail-feature ${qualityClass(room.comfort)}">
+              <button class="edit-feature" type="button" data-edit-room-detail="comfort" data-room-id="${room.id}" title="Editar comodidad">Comodidad: ${escapeHtml(room.comfort)} <span class="edit-indicator">✎</span></button>
+              <button class="remove-feature edit-only" type="button" data-remove-room-detail="comfort" data-room-id="${room.id}" title="Quitar comodidad" aria-label="Quitar comodidad">×</button>
+            </span>`;
+          const locationHtml = hiddenDetails.has('location') ? '' : `
+            <span class="badge detail-feature ${qualityClass(room.location)}">
+              <button class="edit-feature" type="button" data-edit-room-detail="location" data-room-id="${room.id}" title="Editar ubicación">Ubicación: ${escapeHtml(room.location)} <span class="edit-indicator">✎</span></button>
+              <button class="remove-feature edit-only" type="button" data-remove-room-detail="location" data-room-id="${room.id}" title="Quitar ubicación" aria-label="Quitar ubicación">×</button>
+            </span>`;
+          const bedsHtml = room.beds.map(bed => {
+            const occupants = peopleAt(bed.id);
+            const isFull = occupants.length >= bed.capacity;
+            return `
+              <div class="bed dropzone${isFull ? ' full' : ''}" data-location="${bed.id}" data-capacity="${bed.capacity}" tabindex="0" role="button" aria-label="${escapeHtml(bed.label)}, ${occupants.length} de ${bed.capacity} espacios ocupados">
+                <div class="bed-top">
+                  <div class="bed-label"><span aria-hidden="true">${bedIcon(bed.type)}</span><span>${escapeHtml(bed.label)}</span></div>
+                  <div class="bed-meta">
+                    <span class="capacity">${occupants.length}/${bed.capacity}</span>
+                    <button class="bed-action edit-only" type="button" data-edit-bed="${bed.id}" data-room-id="${room.id}" title="Editar cama">✎</button>
+                    <button class="bed-action delete edit-only" type="button" data-delete-bed="${bed.id}" data-room-id="${room.id}" title="Eliminar cama">×</button>
+                  </div>
+                </div>
+                <div class="bed-people">
+                  ${occupants.length ? occupants.map(personHtml).join('') : '<div class="empty">Soltar persona aquí</div>'}
+                </div>
+              </div>`;
+          }).join('');
+          return `
+            <article class="room">
+              <header class="room-head">
+                <div class="room-title-row">
+                  <h3 class="room-title">${escapeHtml(room.name)}</h3>
+                  <div class="room-actions">
+                    <span class="room-count">${roomPeople}/${roomCapacity}</span>
+                    <button class="icon-btn edit-only" type="button" data-rename-room="${room.id}" title="Renombrar cuarto">✎</button>
+                    <button class="icon-btn edit-only" type="button" data-move-room="${room.id}" data-direction="-1" title="Mover antes" ${roomIndex === 0 ? 'disabled' : ''}>↑</button>
+                    <button class="icon-btn edit-only" type="button" data-move-room="${room.id}" data-direction="1" title="Mover después" ${roomIndex === state.rooms.length - 1 ? 'disabled' : ''}>↓</button>
+                  </div>
+                </div>
+                <div class="badges">
+                  ${comfortHtml}
+                  ${locationHtml}
+                  ${customFeaturesHtml}
+                  <button class="add-feature edit-only" type="button" data-add-feature-room="${room.id}">+ Característica</button>
+                </div>
+              </header>
+              <div class="beds">${bedsHtml}<button class="add-bed edit-only" type="button" data-add-bed="${room.id}">+ Agregar cama</button></div>
+            </article>`;
+        }).join('');
+      }
+
+      function renderBathrooms() {
+        document.getElementById('bathroomCount').textContent = state.bathrooms.length;
+        if (!state.bathrooms.length) {
+          bathroomsGrid.innerHTML = '<div class="bathroom-empty">Todavía no hay baños o duchas compartidas.<span class="edit-only"> Usa “Agregar baño o ducha” para crear el primero.</span></div>';
+          return;
+        }
+
+        bathroomsGrid.innerHTML = state.bathrooms.map((bathroom, index) => {
+          const isShower = bathroom.type.toLocaleLowerCase('es').includes('ducha');
+
+          return `
+            <article class="bathroom">
+              <header class="room-head">
+                <div class="room-title-row">
+                  <h3 class="room-title">🚿 ${isShower ? 'Ducha compartida' : 'Baño compartido'}</h3>
+                  <div class="room-actions">
+                    <button class="icon-btn edit-only" type="button" data-move-bathroom="${escapeHtml(bathroom.id)}" data-direction="-1" title="Mover antes" ${index === 0 ? 'disabled' : ''}>↑</button>
+                    <button class="icon-btn edit-only" type="button" data-move-bathroom="${escapeHtml(bathroom.id)}" data-direction="1" title="Mover después" ${index === state.bathrooms.length - 1 ? 'disabled' : ''}>↓</button>
+                    <button class="icon-btn edit-only" type="button" data-delete-bathroom="${escapeHtml(bathroom.id)}" title="Eliminar baño o ducha">×</button>
+                  </div>
+                </div>
+                <div class="badges">
+                  <button class="badge detail-badge good" type="button" data-edit-bathroom-type="${escapeHtml(bathroom.id)}">Tipo: ${escapeHtml(bathroom.type)} <span class="edit-indicator">✎</span></button>
+                  <button class="badge detail-badge normal" type="button" data-edit-bathroom-location="${escapeHtml(bathroom.id)}">Ubicación: ${escapeHtml(bathroom.location)} <span class="edit-indicator">✎</span></button>
+                </div>
+              </header>
+            </article>`;
+        }).join('');
+      }
+
+      function renderMealDays() {
+        if (!state.mealDays.length) {
+          mealDaysGrid.innerHTML = '<div class="meal-empty">Todavía no hay comidas agregadas.<span class="edit-only"> Usa “Agregar día o sección” para comenzar.</span></div>';
+          return;
+        }
+
+        mealDaysGrid.innerHTML = state.mealDays.map((day, dayIndex) => {
+          const mealsHtml = day.meals.length
+            ? day.meals.map((meal, mealIndex) => {
+              const itemsHtml = meal.items.length
+                ? meal.items.map((item, itemIndex) => `
+                  <div class="meal-item">
+                    <div class="meal-item-main"><p class="meal-description">• ${escapeHtml(item.name)}</p></div>
+                    <div class="meal-actions edit-only">
+                      <button class="icon-btn" type="button" data-edit-meal-item="${escapeHtml(item.id)}" data-meal-id="${escapeHtml(meal.id)}" data-meal-day-id="${escapeHtml(day.id)}" title="Editar ítem">✎</button>
+                      <button class="icon-btn" type="button" data-move-meal-item="${escapeHtml(item.id)}" data-meal-id="${escapeHtml(meal.id)}" data-meal-day-id="${escapeHtml(day.id)}" data-direction="-1" title="Mover ítem antes" ${itemIndex === 0 ? 'disabled' : ''}>↑</button>
+                      <button class="icon-btn" type="button" data-move-meal-item="${escapeHtml(item.id)}" data-meal-id="${escapeHtml(meal.id)}" data-meal-day-id="${escapeHtml(day.id)}" data-direction="1" title="Mover ítem después" ${itemIndex === meal.items.length - 1 ? 'disabled' : ''}>↓</button>
+                      <button class="icon-btn" type="button" data-delete-meal-item="${escapeHtml(item.id)}" data-meal-id="${escapeHtml(meal.id)}" data-meal-day-id="${escapeHtml(day.id)}" title="Eliminar ítem">×</button>
+                    </div>
+                  </div>`).join('')
+                : '<div class="meal-empty">Este tipo de comida todavía no tiene ítems.</div>';
+              return `
+                <article class="meal-group">
+                  <header class="meal-group-head">
+                    <h4 class="meal-name">🍴 ${escapeHtml(meal.name)}</h4>
+                    <div class="meal-actions edit-only">
+                      <button class="btn soft small" type="button" data-add-meal-item="${escapeHtml(meal.id)}" data-meal-day-id="${escapeHtml(day.id)}">+ Ítem</button>
+                      <button class="icon-btn" type="button" data-edit-meal="${escapeHtml(meal.id)}" data-meal-day-id="${escapeHtml(day.id)}" title="Renombrar tipo de comida">✎</button>
+                      <button class="icon-btn" type="button" data-move-meal="${escapeHtml(meal.id)}" data-meal-day-id="${escapeHtml(day.id)}" data-direction="-1" title="Mover tipo de comida antes" ${mealIndex === 0 ? 'disabled' : ''}>↑</button>
+                      <button class="icon-btn" type="button" data-move-meal="${escapeHtml(meal.id)}" data-meal-day-id="${escapeHtml(day.id)}" data-direction="1" title="Mover tipo de comida después" ${mealIndex === day.meals.length - 1 ? 'disabled' : ''}>↓</button>
+                      <button class="icon-btn" type="button" data-delete-meal="${escapeHtml(meal.id)}" data-meal-day-id="${escapeHtml(day.id)}" title="Eliminar tipo de comida">×</button>
+                    </div>
+                  </header>
+                  <div class="meal-items">${itemsHtml}</div>
+                </article>`;
+            }).join('')
+            : '<div class="meal-empty">No hay tipos de comida en esta sección todavía.</div>';
+
+          return `
+            <section class="meal-day">
+              <header class="meal-day-head">
+                <h3>${escapeHtml(day.name)}</h3>
+                <div class="room-actions edit-only">
+                  <button class="btn soft small" type="button" data-add-meal="${escapeHtml(day.id)}">+ Tipo de comida</button>
+                  <button class="icon-btn" type="button" data-rename-meal-day="${escapeHtml(day.id)}" title="Renombrar sección">✎</button>
+                  <button class="icon-btn" type="button" data-move-meal-day="${escapeHtml(day.id)}" data-direction="-1" title="Mover antes" ${dayIndex === 0 ? 'disabled' : ''}>↑</button>
+                  <button class="icon-btn" type="button" data-move-meal-day="${escapeHtml(day.id)}" data-direction="1" title="Mover después" ${dayIndex === state.mealDays.length - 1 ? 'disabled' : ''}>↓</button>
+                  <button class="icon-btn" type="button" data-delete-meal-day="${escapeHtml(day.id)}" title="Eliminar sección">×</button>
+                </div>
+              </header>
+              <div class="meal-list">${mealsHtml}</div>
+            </section>`;
+        }).join('');
+      }
+
+      function renderActivities() {
+        if (!state.activities.length) {
+          activitiesList.innerHTML = '<div class="meal-empty">Todavía no hay actividades agregadas.<span class="edit-only"> Usa “Agregar actividad” para comenzar.</span></div>';
+          return;
+        }
+        activitiesList.innerHTML = state.activities.map((activity, index) => `
+          <article class="activity-card">
+            <div>
+              <h3>🎉 ${escapeHtml(activity.name)}</h3>
+              ${activity.details ? `<p>${escapeHtml(activity.details)}</p>` : ''}
+            </div>
+            <div class="meal-actions edit-only">
+              <button class="icon-btn" type="button" data-edit-activity="${escapeHtml(activity.id)}" title="Editar actividad">✎</button>
+              <button class="icon-btn" type="button" data-move-activity="${escapeHtml(activity.id)}" data-direction="-1" title="Mover antes" ${index === 0 ? 'disabled' : ''}>↑</button>
+              <button class="icon-btn" type="button" data-move-activity="${escapeHtml(activity.id)}" data-direction="1" title="Mover después" ${index === state.activities.length - 1 ? 'disabled' : ''}>↓</button>
+              <button class="icon-btn" type="button" data-delete-activity="${escapeHtml(activity.id)}" title="Eliminar actividad">×</button>
+            </div>
+          </article>`).join('');
+      }
+
+      function activateTab(tabName, updateHash = true) {
+        activeTab = ['food', 'activities'].includes(tabName) ? tabName : 'airbnb';
+        document.body.classList.toggle('food-tab-active', activeTab !== 'airbnb');
+        document.querySelectorAll('[data-tab]').forEach(button => {
+          const isActive = button.dataset.tab === activeTab;
+          button.classList.toggle('active', isActive);
+          button.setAttribute('aria-selected', String(isActive));
+        });
+        const airbnbTab = document.getElementById('airbnbTab');
+        const foodTab = document.getElementById('foodTab');
+        const activitiesTab = document.getElementById('activitiesTab');
+        airbnbTab.classList.toggle('active', activeTab === 'airbnb');
+        foodTab.classList.toggle('active', activeTab === 'food');
+        activitiesTab.classList.toggle('active', activeTab === 'activities');
+        airbnbTab.hidden = activeTab !== 'airbnb';
+        foodTab.hidden = activeTab !== 'food';
+        activitiesTab.hidden = activeTab !== 'activities';
+        if (updateHash && window.history?.replaceState) {
+          const hash = activeTab === 'food' ? '#comidas' : (activeTab === 'activities' ? '#actividades' : '#airbnb');
+          window.history.replaceState(null, '', hash);
+        }
+        document.getElementById('brandSubtitle').textContent = activeTab === 'food'
+          ? (state.readOnly ? 'Menú en modo solo lectura' : 'Organiza el menú de la fiesta')
+          : (activeTab === 'activities'
+            ? (state.readOnly ? 'Actividades en modo solo lectura' : 'Organiza las actividades de la fiesta')
+            : (state.readOnly ? 'Distribución en modo solo lectura' : 'Arrastra cada persona hasta su cama'));
+      }
+
+      function renderPool() {
+        const unassigned = peopleAt('unassigned');
+        pool.innerHTML = unassigned.length
+          ? unassigned.map(personHtml).join('')
+          : '<div class="empty">Todas las personas están asignadas</div>';
+        document.getElementById('poolCount').textContent = unassigned.length;
+      }
+
+      function renderStats() {
+        const assigned = state.people.filter(person => person.location !== 'unassigned').length;
+        const allBeds = getAllBeds();
+        const totalCapacity = allBeds.reduce((sum, bed) => sum + bed.capacity, 0);
+        document.getElementById('totalPeople').textContent = state.people.length;
+        document.getElementById('assignedPeople').textContent = assigned;
+        document.getElementById('availableSpaces').textContent = Math.max(0, totalCapacity - assigned);
+        document.getElementById('capacitySummary').textContent = `La casa tiene ${totalCapacity} espacios distribuidos en ${allBeds.length} camas.`;
+      }
+
+      function render() {
+        renderPool();
+        renderRooms();
+        renderBathrooms();
+        renderMealDays();
+        renderActivities();
+        renderStats();
+        document.body.classList.toggle('read-only', state.readOnly);
+        document.body.classList.toggle('room-details-hidden', !state.showRoomDetails);
+        const readOnlyButton = document.getElementById('toggleReadOnly');
+        readOnlyButton.textContent = state.readOnly ? 'Activar edición' : 'Activar solo lectura';
+        readOnlyButton.setAttribute('aria-pressed', String(state.readOnly));
+        const foodReadOnlyButton = document.getElementById('foodToggleReadOnly');
+        foodReadOnlyButton.textContent = state.readOnly ? 'Activar edición' : 'Activar solo lectura';
+        foodReadOnlyButton.setAttribute('aria-pressed', String(state.readOnly));
+        const activitiesReadOnlyButton = document.getElementById('activitiesToggleReadOnly');
+        activitiesReadOnlyButton.textContent = state.readOnly ? 'Activar edición' : 'Activar solo lectura';
+        activitiesReadOnlyButton.setAttribute('aria-pressed', String(state.readOnly));
+        document.getElementById('poolHelp').textContent = state.readOnly ? 'Personas que todavía no tienen una cama asignada.' : 'Arrastra desde aquí o toca un nombre y después una cama.';
+        const detailsButton = document.getElementById('toggleRoomDetails');
+        detailsButton.textContent = state.showRoomDetails ? 'Ocultar características' : 'Mostrar características';
+        detailsButton.setAttribute('aria-pressed', String(!state.showRoomDetails));
+        document.getElementById('undoImport').hidden = !localStorage.getItem(BACKUP_KEY);
+        selectionTip.classList.toggle('show', Boolean(selectedPersonId) && !state.readOnly);
+        document.querySelectorAll('.dropzone').forEach(zone => {
+          zone.classList.toggle('selected-target', Boolean(selectedPersonId) && !state.readOnly);
+        });
+        activateTab(activeTab, false);
+      }
+
+      function makeId() {
+        return window.crypto?.randomUUID?.() || `p-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+      }
+
+      function addPeople(rawValue) {
+        const names = rawValue
+          .split(/[\n,;]+/)
+          .map(name => name.trim().replace(/\s+/g, ' '))
+          .filter(Boolean);
+        if (!names.length) return;
+
+        const existing = new Set(state.people.map(person => person.name.toLocaleLowerCase('es')));
+        const uniqueNewNames = [];
+        const duplicates = [];
+        names.forEach(name => {
+          const key = name.toLocaleLowerCase('es');
+          if (existing.has(key)) duplicates.push(name);
+          else {
+            existing.add(key);
+            uniqueNewNames.push(name);
+          }
+        });
+
+        uniqueNewNames.forEach(name => state.people.push({ id: makeId(), name, location: 'unassigned' }));
+        saveState();
+        render();
+        if (duplicates.length) showToast(`No se agregaron nombres repetidos: ${duplicates.join(', ')}`);
+        else showToast(`${uniqueNewNames.length} ${uniqueNewNames.length === 1 ? 'persona agregada' : 'personas agregadas'}`);
+      }
+
+      function movePerson(personId, targetLocation) {
+        const person = state.people.find(item => item.id === personId);
+        if (!person) return false;
+        if (person.location === targetLocation) {
+          selectedPersonId = null;
+          render();
+          return true;
+        }
+
+        const bed = getAllBeds().find(item => item.id === targetLocation);
+        if (bed && peopleAt(targetLocation).length >= bed.capacity) {
+          const element = document.querySelector(`[data-location="${CSS.escape(targetLocation)}"]`);
+          element?.classList.add('shake');
+          setTimeout(() => element?.classList.remove('shake'), 300);
+          showToast(`Esa ${bed.label.toLowerCase()} ya está llena`);
+          return false;
+        }
+
+        person.location = targetLocation;
+        selectedPersonId = null;
+        saveState();
+        render();
+        return true;
+      }
+
+      function removePerson(personId) {
+        const person = state.people.find(item => item.id === personId);
+        if (!person) return;
+        if (!confirm(`¿Eliminar a ${person.name} de la lista?`)) return;
+        state.people = state.people.filter(item => item.id !== personId);
+        if (selectedPersonId === personId) selectedPersonId = null;
+        saveState();
+        render();
+        showToast(`${person.name} fue eliminado/a`);
+      }
+
+      function editPersonName(personId) {
+        const person = state.people.find(item => item.id === personId);
+        if (!person) return;
+        const input = prompt('Editar nombre de la persona:', person.name);
+        if (input === null) return;
+        const name = input.trim().replace(/\s+/g, ' ');
+        if (!name) {
+          showToast('El nombre no puede quedar vacío');
+          return;
+        }
+        const repeated = state.people.some(item => item.id !== personId && item.name.toLocaleLowerCase('es') === name.toLocaleLowerCase('es'));
+        if (repeated) {
+          showToast('Ya existe una persona con ese nombre');
+          return;
+        }
+        person.name = name;
+        saveState();
+        render();
+        showToast('Nombre actualizado');
+      }
+
+      function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+      }
+
+      function buildSummary() {
+        const lines = ['FIESTA DE JEFF 👑', '', 'DISTRIBUCIÓN DEL AIRBNB', ''];
+        state.rooms.forEach(room => {
+          const hiddenDetails = new Set(room.hiddenDetails || []);
+          const roomDetails = [];
+          if (!hiddenDetails.has('comfort')) roomDetails.push(`Comodidad ${room.comfort}`);
+          if (!hiddenDetails.has('location')) roomDetails.push(`ubicación ${room.location}`);
+          lines.push(roomDetails.length ? `${room.name} — ${roomDetails.join(', ')}` : room.name);
+          const customFeatures = state.customRoomFeatures?.[room.id] || [];
+          if (customFeatures.length) {
+            lines.push(`  Características: ${customFeatures.map(feature => `${feature.label}${feature.value ? `: ${feature.value}` : ''}`).join(', ')}`);
+          }
+          room.beds.forEach(bed => {
+            const names = peopleAt(bed.id).map(person => person.name);
+            lines.push(`  • ${bed.label}: ${names.length ? names.join(' y ') : 'Sin asignar'}`);
+          });
+          lines.push('');
+        });
+        if (state.bathrooms.length) {
+          lines.push('BAÑOS COMPARTIDOS', '');
+          state.bathrooms.forEach(bathroom => {
+            lines.push(`  • Tipo: ${bathroom.type} — Ubicación: ${bathroom.location}`);
+            lines.push('');
+          });
+        }
+        const unassigned = peopleAt('unassigned').map(person => person.name);
+        lines.push(`Sin asignar: ${unassigned.length ? unassigned.join(', ') : 'Nadie'}`);
+        if (state.mealDays.length) {
+          lines.push('', 'MENÚ DE COMIDAS', '');
+          state.mealDays.forEach(day => {
+            lines.push(day.name);
+            if (day.meals.length) {
+              day.meals.forEach(meal => {
+                lines.push(`  ${meal.name}`);
+                if (meal.items.length) meal.items.forEach(item => lines.push(`    • ${item.name}`));
+                else lines.push('    • Sin ítems agregados');
+              });
+            } else {
+              lines.push('  • Sin tipos de comida agregados');
+            }
+            lines.push('');
+          });
+        }
+        if (state.activities.length) {
+          lines.push('', 'ACTIVIDADES', '');
+          state.activities.forEach(activity => lines.push(`  • ${activity.name}${activity.details ? `: ${activity.details}` : ''}`));
+        }
+        return lines.join('\n');
+      }
+
+      function exportDistribution() {
+        const exportPayload = {
+          app: 'Fiesta de Jeff',
+          version: 6,
+          exportedAt: new Date().toISOString(),
+          readOnly: state.readOnly,
+          rooms: state.rooms,
+          bathrooms: state.bathrooms,
+          mealDays: state.mealDays,
+          activities: state.activities,
+          showRoomDetails: state.showRoomDetails,
+          customRoomFeatures: state.customRoomFeatures,
+          people: state.people.map(person => ({
+            id: person.id,
+            name: person.name,
+            location: person.location
+          }))
+        };
+        const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        const date = new Date().toISOString().slice(0, 10);
+        link.href = url;
+        link.download = `fiesta-de-jeff-${date}.json`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+        showToast('Datos de la fiesta exportados correctamente');
+      }
+
+      function normalizeImportedState(data) {
+        if (!data || !Array.isArray(data.people)) throw new Error('El archivo no contiene una distribución válida.');
+        const importedRooms = Object.prototype.hasOwnProperty.call(data, 'rooms')
+          ? normalizeRooms(data.rooms)
+          : normalizeRooms(state.rooms);
+        const importedBathrooms = Object.prototype.hasOwnProperty.call(data, 'bathrooms')
+          ? normalizeBathrooms(data.bathrooms)
+          : normalizeBathrooms(state.bathrooms);
+        const importedMealDays = Object.prototype.hasOwnProperty.call(data, 'mealDays')
+          ? normalizeMealDays(data.mealDays)
+          : normalizeMealDays(state.mealDays);
+        const importedActivities = Object.prototype.hasOwnProperty.call(data, 'activities')
+          ? normalizeActivities(data.activities)
+          : normalizeActivities(state.activities);
+        const importedBeds = getAllBeds(importedRooms);
+        const usedIds = new Set();
+        const importedPeople = [];
+
+        data.people.forEach((person, index) => {
+          if (!person || typeof person.name !== 'string' || !person.name.trim()) {
+            throw new Error(`La persona #${index + 1} no tiene un nombre válido.`);
+          }
+          let id = typeof person.id === 'string' && person.id.trim() ? person.id : makeId();
+          if (usedIds.has(id)) id = makeId();
+          usedIds.add(id);
+          importedPeople.push({
+            id,
+            name: person.name.trim().replace(/\s+/g, ' '),
+            location: importedBeds.some(bed => bed.id === person.location) ? person.location : 'unassigned'
+          });
+        });
+
+        const bedUsage = new Map();
+        importedPeople.forEach(person => {
+          if (person.location === 'unassigned') return;
+          const bed = importedBeds.find(item => item.id === person.location);
+          const usage = bedUsage.get(person.location) || 0;
+          if (!bed || usage >= bed.capacity) person.location = 'unassigned';
+          else bedUsage.set(person.location, usage + 1);
+        });
+
+        return {
+          rooms: importedRooms,
+          bathrooms: importedBathrooms,
+          mealDays: importedMealDays,
+          activities: importedActivities,
+          people: importedPeople,
+          readOnly: state.readOnly,
+          showRoomDetails: typeof data.showRoomDetails === 'boolean' ? data.showRoomDetails : state.showRoomDetails,
+          customRoomFeatures: Object.prototype.hasOwnProperty.call(data, 'customRoomFeatures')
+            ? normalizeCustomRoomFeatures(data.customRoomFeatures, importedRooms)
+            : normalizeCustomRoomFeatures(state.customRoomFeatures, importedRooms)
+        };
+      }
+
+      function addRoomFeature(roomId) {
+        const room = state.rooms.find(item => item.id === roomId);
+        if (!room) return;
+        const labelInput = prompt(`Nombre de la característica para ${room.name}:\nEjemplos: Baño, Aire acondicionado, Ruido`);
+        if (labelInput === null) return;
+        const label = labelInput.trim().replace(/\s+/g, ' ');
+        if (!label) {
+          showToast('Escribe un nombre para la característica');
+          return;
+        }
+        const labelKey = label.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('es');
+        const builtInField = labelKey === 'comodidad' ? 'comfort' : (labelKey === 'ubicacion' ? 'location' : null);
+        if (builtInField) {
+          room.hiddenDetails ||= [];
+          if (!room.hiddenDetails.includes(builtInField)) {
+            showToast(`La característica “${label}” ya existe; puedes editarla directamente`);
+            return;
+          }
+          const valueInput = prompt(`Valor de “${label}”:`, room[builtInField]);
+          if (valueInput === null) return;
+          const value = valueInput.trim().replace(/\s+/g, ' ');
+          if (!value) return showToast('Escribe un valor para la característica');
+          room[builtInField] = value;
+          room.hiddenDetails = room.hiddenDetails.filter(field => field !== builtInField);
+          saveState();
+          render();
+          showToast(`Característica “${label}” restaurada`);
+          return;
+        }
+        const valueInput = prompt(`Valor de “${label}”:\nEjemplos: Privado, Sí, Bajo`);
+        if (valueInput === null) return;
+        const value = valueInput.trim().replace(/\s+/g, ' ');
+        if (!value) {
+          showToast('Escribe un valor para la característica');
+          return;
+        }
+        if (!state.customRoomFeatures[roomId]) state.customRoomFeatures[roomId] = [];
+        state.customRoomFeatures[roomId].push({ id: makeId(), label, value });
+        saveState();
+        render();
+        showToast(`Característica agregada a ${room.name}`);
+      }
+
+      function removeRoomFeature(roomId, featureId) {
+        const room = state.rooms.find(item => item.id === roomId);
+        const feature = state.customRoomFeatures?.[roomId]?.find(item => item.id === featureId);
+        if (!room || !feature) return;
+        if (!confirm(`¿Eliminar “${feature.label}: ${feature.value}” de ${room.name}?`)) return;
+        state.customRoomFeatures[roomId] = state.customRoomFeatures[roomId].filter(item => item.id !== featureId);
+        saveState();
+        render();
+        showToast('Característica eliminada');
+      }
+
+      function editRoomFeature(roomId, featureId) {
+        const room = state.rooms.find(item => item.id === roomId);
+        const feature = state.customRoomFeatures?.[roomId]?.find(item => item.id === featureId);
+        if (!room || !feature) return;
+        const labelInput = prompt(`Editar nombre de la característica de ${room.name}:`, feature.label);
+        if (labelInput === null) return;
+        const label = labelInput.trim().replace(/\s+/g, ' ');
+        if (!label) return showToast('El nombre de la característica no puede quedar vacío');
+        const valueInput = prompt(`Editar valor de “${label}”:`, feature.value);
+        if (valueInput === null) return;
+        const value = valueInput.trim().replace(/\s+/g, ' ');
+        if (!value) return showToast('El valor no puede quedar vacío');
+        feature.label = label;
+        feature.value = value;
+        saveState();
+        render();
+        showToast('Característica actualizada');
+      }
+
+      function editRoomDetail(roomId, field) {
+        const room = state.rooms.find(item => item.id === roomId);
+        if (!room || !['comfort', 'location'].includes(field)) return;
+        const title = field === 'comfort' ? 'comodidad' : 'ubicación';
+        const input = prompt(`Editar ${title} de ${room.name}:`, room[field]);
+        if (input === null) return;
+        const value = input.trim().replace(/\s+/g, ' ');
+        if (!value) return showToast(`La ${title} no puede quedar vacía`);
+        room[field] = value;
+        saveState();
+        render();
+        showToast(`${title[0].toUpperCase() + title.slice(1)} actualizada`);
+      }
+
+      function removeRoomDetail(roomId, field) {
+        const room = state.rooms.find(item => item.id === roomId);
+        if (!room || !['comfort', 'location'].includes(field)) return;
+        const title = field === 'comfort' ? 'Comodidad' : 'Ubicación';
+        if (!confirm(`¿Quitar la característica “${title}” de ${room.name}?`)) return;
+        room.hiddenDetails ||= [];
+        if (!room.hiddenDetails.includes(field)) room.hiddenDetails.push(field);
+        saveState();
+        render();
+        showToast(`Característica “${title}” eliminada`);
+      }
+
+      function renameRoom(roomId) {
+        const room = state.rooms.find(item => item.id === roomId);
+        if (!room) return;
+        const input = prompt('Nuevo nombre del cuarto:', room.name);
+        if (input === null) return;
+        const name = input.trim().replace(/\s+/g, ' ');
+        if (!name) return showToast('El nombre del cuarto no puede quedar vacío');
+        room.name = name;
+        saveState();
+        render();
+        showToast('Cuarto renombrado');
+      }
+
+      function moveRoom(roomId, direction) {
+        const index = state.rooms.findIndex(room => room.id === roomId);
+        const targetIndex = index + Number(direction);
+        if (index < 0 || targetIndex < 0 || targetIndex >= state.rooms.length) return;
+        const [room] = state.rooms.splice(index, 1);
+        state.rooms.splice(targetIndex, 0, room);
+        saveState();
+        render();
+      }
+
+      function addBathroom() {
+        const typeInput = prompt('Tipo:\nEjemplos: Completo, Medio, Ducha', 'Completo');
+        if (typeInput === null) return;
+        const type = typeInput.trim().replace(/\s+/g, ' ');
+        if (!type) return showToast('El tipo no puede quedar vacío');
+        const locationInput = prompt('Ubicación:', 'Sin definir');
+        if (locationInput === null) return;
+        const location = locationInput.trim().replace(/\s+/g, ' ') || 'Sin definir';
+        state.bathrooms.push({ id: `bathroom-${makeId()}`, type, location });
+        saveState();
+        render();
+        showToast(`${type.toLocaleLowerCase('es').includes('ducha') ? 'Ducha' : 'Baño'} agregado`);
+      }
+
+      function editBathroomType(bathroomId) {
+        const bathroom = state.bathrooms.find(item => item.id === bathroomId);
+        if (!bathroom) return;
+        const input = prompt('Editar tipo:\nEjemplos: Completo, Medio, Ducha', bathroom.type);
+        if (input === null) return;
+        const type = input.trim().replace(/\s+/g, ' ');
+        if (!type) return showToast('El tipo no puede quedar vacío');
+        bathroom.type = type;
+        saveState();
+        render();
+        showToast('Tipo actualizado');
+      }
+
+      function editBathroomLocation(bathroomId) {
+        const bathroom = state.bathrooms.find(item => item.id === bathroomId);
+        if (!bathroom) return;
+        const input = prompt('Editar ubicación:', bathroom.location);
+        if (input === null) return;
+        const location = input.trim().replace(/\s+/g, ' ');
+        if (!location) return showToast('La ubicación no puede quedar vacía');
+        bathroom.location = location;
+        saveState();
+        render();
+        showToast('Ubicación actualizada');
+      }
+
+      function moveBathroom(bathroomId, direction) {
+        const index = state.bathrooms.findIndex(item => item.id === bathroomId);
+        const targetIndex = index + Number(direction);
+        if (index < 0 || targetIndex < 0 || targetIndex >= state.bathrooms.length) return;
+        const [bathroom] = state.bathrooms.splice(index, 1);
+        state.bathrooms.splice(targetIndex, 0, bathroom);
+        saveState();
+        render();
+      }
+
+      function deleteBathroom(bathroomId) {
+        const bathroom = state.bathrooms.find(item => item.id === bathroomId);
+        if (!bathroom || !confirm(`¿Eliminar este ${bathroom.type.toLocaleLowerCase('es').includes('ducha') ? 'espacio de ducha' : 'baño compartido'}?`)) return;
+        state.bathrooms = state.bathrooms.filter(item => item.id !== bathroomId);
+        saveState();
+        render();
+        showToast('Baño o ducha eliminado');
+      }
+
+      function addMealDay() {
+        const suggestedName = `Día o sección ${state.mealDays.length + 1}`;
+        const input = prompt('Nombre del día o sección del menú:\nEjemplos: Viernes, Sábado, Cena principal', suggestedName);
+        if (input === null) return;
+        const name = input.trim().replace(/\s+/g, ' ');
+        if (!name) return showToast('El nombre no puede quedar vacío');
+        state.mealDays.push({ id: `meal-day-${makeId()}`, name, meals: [] });
+        saveState();
+        render();
+        showToast(`${name} agregado al menú`);
+      }
+
+      function renameMealDay(dayId) {
+        const day = state.mealDays.find(item => item.id === dayId);
+        if (!day) return;
+        const input = prompt('Nuevo nombre del día o sección:', day.name);
+        if (input === null) return;
+        const name = input.trim().replace(/\s+/g, ' ');
+        if (!name) return showToast('El nombre no puede quedar vacío');
+        day.name = name;
+        saveState();
+        render();
+        showToast('Sección renombrada');
+      }
+
+      function moveMealDay(dayId, direction) {
+        const index = state.mealDays.findIndex(item => item.id === dayId);
+        const targetIndex = index + Number(direction);
+        if (index < 0 || targetIndex < 0 || targetIndex >= state.mealDays.length) return;
+        const [day] = state.mealDays.splice(index, 1);
+        state.mealDays.splice(targetIndex, 0, day);
+        saveState();
+        render();
+      }
+
+      function deleteMealDay(dayId) {
+        const day = state.mealDays.find(item => item.id === dayId);
+        if (!day) return;
+        const detail = day.meals.length ? ` También se eliminarán ${day.meals.length} ${day.meals.length === 1 ? 'comida' : 'comidas'}.` : '';
+        if (!confirm(`¿Eliminar “${day.name}”?${detail}`)) return;
+        state.mealDays = state.mealDays.filter(item => item.id !== dayId);
+        saveState();
+        render();
+        showToast('Sección eliminada');
+      }
+
+      function askForMealType(existing = null) {
+        const nameInput = prompt('Nombre o tiempo de comida:\nEjemplos: Desayuno, Almuerzo, Cena, Snacks', existing?.name || 'Desayuno');
+        if (nameInput === null) return null;
+        const name = nameInput.trim().replace(/\s+/g, ' ');
+        if (!name) {
+          showToast('El tipo de comida no puede quedar vacío');
+          return null;
+        }
+        return { name };
+      }
+
+      function addMeal(dayId) {
+        const day = state.mealDays.find(item => item.id === dayId);
+        if (!day) return;
+        const mealData = askForMealType();
+        if (!mealData) return;
+        day.meals.push({ id: `meal-${makeId()}`, ...mealData, items: [] });
+        saveState();
+        render();
+        showToast(`${mealData.name} agregado a ${day.name}`);
+      }
+
+      function editMeal(dayId, mealId) {
+        const day = state.mealDays.find(item => item.id === dayId);
+        const meal = day?.meals.find(item => item.id === mealId);
+        if (!day || !meal) return;
+        const mealData = askForMealType(meal);
+        if (!mealData) return;
+        Object.assign(meal, mealData);
+        saveState();
+        render();
+        showToast('Tipo de comida actualizado');
+      }
+
+      function moveMeal(dayId, mealId, direction) {
+        const day = state.mealDays.find(item => item.id === dayId);
+        const index = day?.meals.findIndex(item => item.id === mealId) ?? -1;
+        const targetIndex = index + Number(direction);
+        if (!day || index < 0 || targetIndex < 0 || targetIndex >= day.meals.length) return;
+        const [meal] = day.meals.splice(index, 1);
+        day.meals.splice(targetIndex, 0, meal);
+        saveState();
+        render();
+      }
+
+      function deleteMeal(dayId, mealId) {
+        const day = state.mealDays.find(item => item.id === dayId);
+        const meal = day?.meals.find(item => item.id === mealId);
+        const itemDetail = meal?.items.length ? ` También se eliminarán ${meal.items.length} ${meal.items.length === 1 ? 'ítem' : 'ítems'}.` : '';
+        if (!day || !meal || !confirm(`¿Eliminar “${meal.name}” de ${day.name}?${itemDetail}`)) return;
+        day.meals = day.meals.filter(item => item.id !== mealId);
+        saveState();
+        render();
+        showToast('Tipo de comida eliminado');
+      }
+
+      function addMealItem(dayId, mealId) {
+        const day = state.mealDays.find(item => item.id === dayId);
+        const meal = day?.meals.find(item => item.id === mealId);
+        if (!day || !meal) return;
+        const input = prompt(`Agregar ítem a ${meal.name}:\nEjemplos: Arroz con pollo, Ensalada, Refresco`);
+        if (input === null) return;
+        const name = input.trim().replace(/\s+/g, ' ');
+        if (!name) return showToast('El ítem no puede quedar vacío');
+        meal.items.push({ id: `meal-item-${makeId()}`, name });
+        saveState();
+        render();
+        showToast(`Ítem agregado a ${meal.name}`);
+      }
+
+      function editMealItem(dayId, mealId, itemId) {
+        const day = state.mealDays.find(item => item.id === dayId);
+        const meal = day?.meals.find(item => item.id === mealId);
+        const item = meal?.items.find(entry => entry.id === itemId);
+        if (!item) return;
+        const input = prompt('Editar ítem:', item.name);
+        if (input === null) return;
+        const name = input.trim().replace(/\s+/g, ' ');
+        if (!name) return showToast('El ítem no puede quedar vacío');
+        item.name = name;
+        saveState();
+        render();
+        showToast('Ítem actualizado');
+      }
+
+      function moveMealItem(dayId, mealId, itemId, direction) {
+        const day = state.mealDays.find(item => item.id === dayId);
+        const meal = day?.meals.find(item => item.id === mealId);
+        const index = meal?.items.findIndex(item => item.id === itemId) ?? -1;
+        const targetIndex = index + Number(direction);
+        if (!meal || index < 0 || targetIndex < 0 || targetIndex >= meal.items.length) return;
+        const [item] = meal.items.splice(index, 1);
+        meal.items.splice(targetIndex, 0, item);
+        saveState();
+        render();
+      }
+
+      function deleteMealItem(dayId, mealId, itemId) {
+        const day = state.mealDays.find(item => item.id === dayId);
+        const meal = day?.meals.find(item => item.id === mealId);
+        const item = meal?.items.find(entry => entry.id === itemId);
+        if (!meal || !item || !confirm(`¿Eliminar “${item.name}” de ${meal.name}?`)) return;
+        meal.items = meal.items.filter(entry => entry.id !== itemId);
+        saveState();
+        render();
+        showToast('Ítem eliminado');
+      }
+
+      function askForActivity(existing = null) {
+        const nameInput = prompt('Nombre de la actividad:', existing?.name || 'Juegos de Mesa');
+        if (nameInput === null) return null;
+        const name = nameInput.trim().replace(/\s+/g, ' ');
+        if (!name) return showToast('El nombre de la actividad no puede quedar vacío');
+        const detailsInput = prompt('Detalles opcionales:', existing?.details || '');
+        if (detailsInput === null) return null;
+        return { name, details: detailsInput.trim() };
+      }
+
+      function addActivity() {
+        const activity = askForActivity();
+        if (!activity) return;
+        state.activities.push({ id: `activity-${makeId()}`, ...activity });
+        saveState();
+        render();
+        showToast(`${activity.name} agregada`);
+      }
+
+      function editActivity(activityId) {
+        const activity = state.activities.find(item => item.id === activityId);
+        if (!activity) return;
+        const changes = askForActivity(activity);
+        if (!changes) return;
+        Object.assign(activity, changes);
+        saveState();
+        render();
+        showToast('Actividad actualizada');
+      }
+
+      function moveActivity(activityId, direction) {
+        const index = state.activities.findIndex(item => item.id === activityId);
+        const targetIndex = index + Number(direction);
+        if (index < 0 || targetIndex < 0 || targetIndex >= state.activities.length) return;
+        const [activity] = state.activities.splice(index, 1);
+        state.activities.splice(targetIndex, 0, activity);
+        saveState();
+        render();
+      }
+
+      function deleteActivity(activityId) {
+        const activity = state.activities.find(item => item.id === activityId);
+        if (!activity || !confirm(`¿Eliminar “${activity.name}”?`)) return;
+        state.activities = state.activities.filter(item => item.id !== activityId);
+        saveState();
+        render();
+        showToast('Actividad eliminada');
+      }
+
+      function askForBed(existing = null) {
+        const labelInput = prompt('Nombre o tipo de cama:', existing?.label || 'Cama doble');
+        if (labelInput === null) return null;
+        const label = labelInput.trim().replace(/\s+/g, ' ');
+        if (!label) {
+          showToast('El nombre de la cama no puede quedar vacío');
+          return null;
+        }
+        const capacityInput = prompt('¿Cuántas personas caben en esta cama? (1 a 4)', String(existing?.capacity || 2));
+        if (capacityInput === null) return null;
+        const capacity = Number.parseInt(capacityInput, 10);
+        if (!Number.isInteger(capacity) || capacity < 1 || capacity > 4) {
+          showToast('La capacidad debe ser un número entre 1 y 4');
+          return null;
+        }
+        const normalizedLabel = label.toLocaleLowerCase('es');
+        const type = capacity === 1 ? 'single' : (normalizedLabel.includes('queen') ? 'queen' : 'double');
+        return { label, capacity, type };
+      }
+
+      function addBed(roomId) {
+        const room = state.rooms.find(item => item.id === roomId);
+        if (!room) return;
+        const bedData = askForBed();
+        if (!bedData) return;
+        room.beds.push({ id: `${room.id}-bed-${makeId()}`, ...bedData });
+        saveState();
+        render();
+        showToast(`Cama agregada a ${room.name}`);
+      }
+
+      function editBed(roomId, bedId) {
+        const room = state.rooms.find(item => item.id === roomId);
+        const bed = room?.beds.find(item => item.id === bedId);
+        if (!room || !bed) return;
+        const bedData = askForBed(bed);
+        if (!bedData) return;
+        const occupants = peopleAt(bed.id);
+        if (bedData.capacity < occupants.length) {
+          const overflow = occupants.length - bedData.capacity;
+          if (!confirm(`La nueva capacidad dejará ${overflow} ${overflow === 1 ? 'persona' : 'personas'} sin cama. ¿Continuar?`)) return;
+          occupants.slice(bedData.capacity).forEach(person => { person.location = 'unassigned'; });
+        }
+        Object.assign(bed, bedData);
+        saveState();
+        render();
+        showToast('Cama actualizada');
+      }
+
+      function deleteBed(roomId, bedId) {
+        const room = state.rooms.find(item => item.id === roomId);
+        const bed = room?.beds.find(item => item.id === bedId);
+        if (!room || !bed) return;
+        const occupants = peopleAt(bed.id);
+        const occupantMessage = occupants.length ? ` ${occupants.length} ${occupants.length === 1 ? 'persona pasará' : 'personas pasarán'} a “Sin asignar”.` : '';
+        if (!confirm(`¿Eliminar “${bed.label}” de ${room.name}?${occupantMessage}`)) return;
+        occupants.forEach(person => { person.location = 'unassigned'; });
+        room.beds = room.beds.filter(item => item.id !== bedId);
+        saveState();
+        render();
+        showToast('Cama eliminada');
+      }
+
+      async function importDistribution(file) {
+        try {
+          const imported = normalizeImportedState(JSON.parse(await file.text()));
+          const assigned = imported.people.filter(person => person.location !== 'unassigned').length;
+          const message = `El archivo contiene ${imported.people.length} personas (${assigned} asignadas).\n\n¿Deseas reemplazar la distribución actual? Antes se guardará una copia de seguridad automática en este navegador.`;
+          if (!confirm(message)) return;
+
+          localStorage.setItem(BACKUP_KEY, JSON.stringify(state));
+          state = imported;
+          selectedPersonId = null;
+          saveState();
+          render();
+          showToast('Distribución importada correctamente');
+        } catch (error) {
+          showToast(error.message || 'No se pudo importar el archivo');
+        } finally {
+          document.getElementById('importFile').value = '';
+        }
+      }
+
+      async function loadPublishedDistribution() {
+        if (window.location.protocol === 'file:') return;
+        const indicator = document.getElementById('saveIndicator');
+        indicator.textContent = 'Cargando data.json…';
+        try {
+          const response = await fetch('./data.json', { cache: 'no-store' });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const publishedData = JSON.parse(await response.text());
+          const publishedState = normalizeImportedState(publishedData);
+          publishedState.readOnly = publishedData.readOnly === true;
+          publishedState.showRoomDetails = publishedData.showRoomDetails !== false;
+          state = publishedState;
+          selectedPersonId = null;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+          render();
+          indicator.textContent = '✓ Datos publicados cargados';
+        } catch (error) {
+          indicator.textContent = '⚠ Usando datos locales';
+          showToast('No se pudo cargar data.json; se muestran los datos guardados en este navegador');
+          console.warn('No se pudo cargar data.json:', error);
+        }
+      }
+
+      document.getElementById('addForm').addEventListener('submit', event => {
+        event.preventDefault();
+        if (state.readOnly) return;
+        const input = document.getElementById('nameInput');
+        addPeople(input.value);
+        input.value = '';
+        input.focus();
+      });
+
+      document.addEventListener('dragstart', event => {
+        if (state.readOnly) {
+          event.preventDefault();
+          return;
+        }
+        const personElement = event.target.closest('.person');
+        if (!personElement) return;
+        draggedPersonId = personElement.dataset.personId;
+        selectedPersonId = null;
+        personElement.classList.add('dragging');
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('text/plain', draggedPersonId);
+      });
+
+      document.addEventListener('dragend', event => {
+        event.target.closest('.person')?.classList.remove('dragging');
+        draggedPersonId = null;
+        document.querySelectorAll('.drag-over').forEach(element => element.classList.remove('drag-over'));
+      });
+
+      document.addEventListener('dragover', event => {
+        if (state.readOnly) return;
+        const zone = event.target.closest('.dropzone');
+        if (!zone) return;
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+        document.querySelectorAll('.drag-over').forEach(element => {
+          if (element !== zone) element.classList.remove('drag-over');
+        });
+        zone.classList.add('drag-over');
+      });
+
+      document.addEventListener('dragleave', event => {
+        const zone = event.target.closest('.dropzone');
+        if (zone && !zone.contains(event.relatedTarget)) zone.classList.remove('drag-over');
+      });
+
+      document.addEventListener('drop', event => {
+        if (state.readOnly) return;
+        const zone = event.target.closest('.dropzone');
+        if (!zone) return;
+        event.preventDefault();
+        zone.classList.remove('drag-over');
+        const personId = draggedPersonId || event.dataTransfer.getData('text/plain');
+        movePerson(personId, zone.dataset.location);
+      });
+
+      document.addEventListener('click', event => {
+        if (state.readOnly) return;
+        const addMealButton = event.target.closest('[data-add-meal]');
+        if (addMealButton) {
+          addMeal(addMealButton.dataset.addMeal);
+          return;
+        }
+
+        const addMealItemButton = event.target.closest('[data-add-meal-item]');
+        if (addMealItemButton) {
+          addMealItem(addMealItemButton.dataset.mealDayId, addMealItemButton.dataset.addMealItem);
+          return;
+        }
+
+        const editMealItemButton = event.target.closest('[data-edit-meal-item]');
+        if (editMealItemButton) {
+          editMealItem(editMealItemButton.dataset.mealDayId, editMealItemButton.dataset.mealId, editMealItemButton.dataset.editMealItem);
+          return;
+        }
+
+        const moveMealItemButton = event.target.closest('[data-move-meal-item]');
+        if (moveMealItemButton) {
+          moveMealItem(moveMealItemButton.dataset.mealDayId, moveMealItemButton.dataset.mealId, moveMealItemButton.dataset.moveMealItem, moveMealItemButton.dataset.direction);
+          return;
+        }
+
+        const deleteMealItemButton = event.target.closest('[data-delete-meal-item]');
+        if (deleteMealItemButton) {
+          deleteMealItem(deleteMealItemButton.dataset.mealDayId, deleteMealItemButton.dataset.mealId, deleteMealItemButton.dataset.deleteMealItem);
+          return;
+        }
+
+        const editMealButton = event.target.closest('[data-edit-meal]');
+        if (editMealButton) {
+          editMeal(editMealButton.dataset.mealDayId, editMealButton.dataset.editMeal);
+          return;
+        }
+
+        const moveMealButton = event.target.closest('[data-move-meal]');
+        if (moveMealButton) {
+          moveMeal(moveMealButton.dataset.mealDayId, moveMealButton.dataset.moveMeal, moveMealButton.dataset.direction);
+          return;
+        }
+
+        const deleteMealButton = event.target.closest('[data-delete-meal]');
+        if (deleteMealButton) {
+          deleteMeal(deleteMealButton.dataset.mealDayId, deleteMealButton.dataset.deleteMeal);
+          return;
+        }
+
+        const renameMealDayButton = event.target.closest('[data-rename-meal-day]');
+        if (renameMealDayButton) {
+          renameMealDay(renameMealDayButton.dataset.renameMealDay);
+          return;
+        }
+
+        const moveMealDayButton = event.target.closest('[data-move-meal-day]');
+        if (moveMealDayButton) {
+          moveMealDay(moveMealDayButton.dataset.moveMealDay, moveMealDayButton.dataset.direction);
+          return;
+        }
+
+        const deleteMealDayButton = event.target.closest('[data-delete-meal-day]');
+        if (deleteMealDayButton) {
+          deleteMealDay(deleteMealDayButton.dataset.deleteMealDay);
+          return;
+        }
+
+        const editActivityButton = event.target.closest('[data-edit-activity]');
+        if (editActivityButton) {
+          editActivity(editActivityButton.dataset.editActivity);
+          return;
+        }
+
+        const moveActivityButton = event.target.closest('[data-move-activity]');
+        if (moveActivityButton) {
+          moveActivity(moveActivityButton.dataset.moveActivity, moveActivityButton.dataset.direction);
+          return;
+        }
+
+        const deleteActivityButton = event.target.closest('[data-delete-activity]');
+        if (deleteActivityButton) {
+          deleteActivity(deleteActivityButton.dataset.deleteActivity);
+          return;
+        }
+
+        const bathroomTypeButton = event.target.closest('[data-edit-bathroom-type]');
+        if (bathroomTypeButton) {
+          editBathroomType(bathroomTypeButton.dataset.editBathroomType);
+          return;
+        }
+
+        const moveBathroomButton = event.target.closest('[data-move-bathroom]');
+        if (moveBathroomButton) {
+          moveBathroom(moveBathroomButton.dataset.moveBathroom, moveBathroomButton.dataset.direction);
+          return;
+        }
+
+        const deleteBathroomButton = event.target.closest('[data-delete-bathroom]');
+        if (deleteBathroomButton) {
+          deleteBathroom(deleteBathroomButton.dataset.deleteBathroom);
+          return;
+        }
+
+        const bathroomLocationButton = event.target.closest('[data-edit-bathroom-location]');
+        if (bathroomLocationButton) {
+          editBathroomLocation(bathroomLocationButton.dataset.editBathroomLocation);
+          return;
+        }
+
+        const renameRoomButton = event.target.closest('[data-rename-room]');
+        if (renameRoomButton) {
+          renameRoom(renameRoomButton.dataset.renameRoom);
+          return;
+        }
+
+        const moveRoomButton = event.target.closest('[data-move-room]');
+        if (moveRoomButton) {
+          moveRoom(moveRoomButton.dataset.moveRoom, moveRoomButton.dataset.direction);
+          return;
+        }
+
+        const roomDetailButton = event.target.closest('[data-edit-room-detail]');
+        if (roomDetailButton) {
+          editRoomDetail(roomDetailButton.dataset.roomId, roomDetailButton.dataset.editRoomDetail);
+          return;
+        }
+
+        const removeRoomDetailButton = event.target.closest('[data-remove-room-detail]');
+        if (removeRoomDetailButton) {
+          removeRoomDetail(removeRoomDetailButton.dataset.roomId, removeRoomDetailButton.dataset.removeRoomDetail);
+          return;
+        }
+
+        const addBedButton = event.target.closest('[data-add-bed]');
+        if (addBedButton) {
+          addBed(addBedButton.dataset.addBed);
+          return;
+        }
+
+        const editBedButton = event.target.closest('[data-edit-bed]');
+        if (editBedButton) {
+          editBed(editBedButton.dataset.roomId, editBedButton.dataset.editBed);
+          return;
+        }
+
+        const deleteBedButton = event.target.closest('[data-delete-bed]');
+        if (deleteBedButton) {
+          deleteBed(deleteBedButton.dataset.roomId, deleteBedButton.dataset.deleteBed);
+          return;
+        }
+
+        const addFeatureButton = event.target.closest('[data-add-feature-room]');
+        if (addFeatureButton) {
+          addRoomFeature(addFeatureButton.dataset.addFeatureRoom);
+          return;
+        }
+
+        const editFeatureButton = event.target.closest('[data-edit-feature-id]');
+        if (editFeatureButton) {
+          editRoomFeature(editFeatureButton.dataset.roomId, editFeatureButton.dataset.editFeatureId);
+          return;
+        }
+
+        const removeFeatureButton = event.target.closest('[data-remove-feature-id]');
+        if (removeFeatureButton) {
+          removeRoomFeature(removeFeatureButton.dataset.roomId, removeFeatureButton.dataset.removeFeatureId);
+          return;
+        }
+
+        const editPersonButton = event.target.closest('[data-edit-person-id]');
+        if (editPersonButton) {
+          event.stopPropagation();
+          editPersonName(editPersonButton.dataset.editPersonId);
+          return;
+        }
+
+        const removeButton = event.target.closest('[data-remove-id]');
+        if (removeButton) {
+          event.stopPropagation();
+          removePerson(removeButton.dataset.removeId);
+          return;
+        }
+
+        const personElement = event.target.closest('.person');
+        if (personElement) {
+          selectedPersonId = selectedPersonId === personElement.dataset.personId ? null : personElement.dataset.personId;
+          render();
+          return;
+        }
+
+        const zone = event.target.closest('.dropzone');
+        if (zone && selectedPersonId) movePerson(selectedPersonId, zone.dataset.location);
+      });
+
+      document.addEventListener('keydown', event => {
+        if (state.readOnly) return;
+        const zone = event.target.closest('.dropzone');
+        if (zone && selectedPersonId && (event.key === 'Enter' || event.key === ' ')) {
+          event.preventDefault();
+          movePerson(selectedPersonId, zone.dataset.location);
+        }
+        if (event.key === 'Escape' && selectedPersonId) {
+          selectedPersonId = null;
+          render();
+        }
+      });
+
+      document.getElementById('clearAssignments').addEventListener('click', () => {
+        if (!state.people.some(person => person.location !== 'unassigned')) {
+          showToast('No hay personas asignadas todavía');
+          return;
+        }
+        if (!confirm('¿Mover a todas las personas a “Sin asignar”? Los nombres no se eliminarán.')) return;
+        state.people.forEach(person => { person.location = 'unassigned'; });
+        selectedPersonId = null;
+        saveState();
+        render();
+        showToast('Todas las personas quedaron sin asignar');
+      });
+
+      document.getElementById('toggleRoomDetails').addEventListener('click', () => {
+        state.showRoomDetails = !state.showRoomDetails;
+        saveState();
+        render();
+      });
+
+      function toggleReadOnlyMode() {
+        state.readOnly = !state.readOnly;
+        selectedPersonId = null;
+        saveState();
+        render();
+        showToast(state.readOnly ? 'Modo solo lectura activado' : 'Modo edición activado');
+      }
+
+      document.getElementById('toggleReadOnly').addEventListener('click', toggleReadOnlyMode);
+      document.getElementById('foodToggleReadOnly').addEventListener('click', toggleReadOnlyMode);
+      document.getElementById('activitiesToggleReadOnly').addEventListener('click', toggleReadOnlyMode);
+
+      document.getElementById('addBathroom').addEventListener('click', addBathroom);
+      document.getElementById('addMealDay').addEventListener('click', addMealDay);
+      document.getElementById('addActivity').addEventListener('click', addActivity);
+
+      document.querySelectorAll('[data-tab]').forEach(button => {
+        button.addEventListener('click', () => activateTab(button.dataset.tab));
+      });
+
+      document.getElementById('exportData').addEventListener('click', exportDistribution);
+      document.getElementById('foodExportData').addEventListener('click', exportDistribution);
+      document.getElementById('activitiesExportData').addEventListener('click', exportDistribution);
+      document.getElementById('importData').addEventListener('click', () => document.getElementById('importFile').click());
+      document.getElementById('foodImportData').addEventListener('click', () => document.getElementById('importFile').click());
+      document.getElementById('activitiesImportData').addEventListener('click', () => document.getElementById('importFile').click());
+      document.getElementById('importFile').addEventListener('change', event => {
+        const file = event.target.files?.[0];
+        if (file) importDistribution(file);
+      });
+      document.getElementById('undoImport').addEventListener('click', () => {
+        try {
+          const backup = localStorage.getItem(BACKUP_KEY);
+          if (!backup) return;
+          if (!confirm('¿Restaurar la distribución que tenías antes de la última importación?')) return;
+          state = normalizeImportedState(JSON.parse(backup));
+          localStorage.removeItem(BACKUP_KEY);
+          selectedPersonId = null;
+          saveState();
+          render();
+          showToast('Distribución anterior restaurada');
+        } catch (_) {
+          showToast('No se pudo restaurar la copia anterior');
+        }
+      });
+
+      document.getElementById('copySummary').addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(buildSummary());
+          showToast('Resumen copiado');
+        } catch (_) {
+          const area = document.createElement('textarea');
+          area.value = buildSummary();
+          area.style.position = 'fixed';
+          area.style.opacity = '0';
+          document.body.appendChild(area);
+          area.select();
+          document.execCommand('copy');
+          area.remove();
+          showToast('Resumen copiado');
+        }
+      });
+
+      render();
+      loadPublishedDistribution();
+    })();
+  </script>
+</body>
+</html>

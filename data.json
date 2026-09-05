@@ -1,0 +1,468 @@
+{
+  "app": "Fiesta de Jeff",
+  "version": 6,
+  "exportedAt": "2026-09-05T18:27:29.254Z",
+  "readOnly": false,
+  "rooms": [
+    {
+      "id": "r1",
+      "number": 1,
+      "name": "Cuarto #1",
+      "comfort": "Baja",
+      "location": "Piso 1",
+      "hiddenDetails": [
+        "comfort"
+      ],
+      "beds": [
+        {
+          "id": "r1-b1",
+          "label": "Cama doble",
+          "type": "double",
+          "capacity": 2
+        }
+      ]
+    },
+    {
+      "id": "r2",
+      "number": 2,
+      "name": "Cuarto #2",
+      "comfort": "Buena",
+      "location": "Piso 1",
+      "hiddenDetails": [
+        "comfort"
+      ],
+      "beds": [
+        {
+          "id": "r2-b1",
+          "label": "Cama doble",
+          "type": "double",
+          "capacity": 2
+        }
+      ]
+    },
+    {
+      "id": "r3",
+      "number": 3,
+      "name": "Cuarto #3",
+      "comfort": "Alta",
+      "location": "Piso 2",
+      "hiddenDetails": [
+        "comfort"
+      ],
+      "beds": [
+        {
+          "id": "r3-b1",
+          "label": "Cama doble",
+          "type": "double",
+          "capacity": 2
+        }
+      ]
+    },
+    {
+      "id": "r4",
+      "number": 4,
+      "name": "Cuarto #4",
+      "comfort": "Alta",
+      "location": "Piso 2",
+      "hiddenDetails": [
+        "comfort"
+      ],
+      "beds": [
+        {
+          "id": "r4-b1",
+          "label": "Cama Queen",
+          "type": "queen",
+          "capacity": 2
+        },
+        {
+          "id": "r4-b2",
+          "label": "Cama doble",
+          "type": "double",
+          "capacity": 2
+        },
+        {
+          "id": "r4-b3",
+          "label": "Cama single",
+          "type": "single",
+          "capacity": 1
+        }
+      ]
+    },
+    {
+      "id": "r5",
+      "number": 5,
+      "name": "Cuarto #5",
+      "comfort": "Baja",
+      "location": "Piso 2",
+      "hiddenDetails": [
+        "comfort"
+      ],
+      "beds": [
+        {
+          "id": "r5-b1",
+          "label": "Cama doble 1",
+          "type": "double",
+          "capacity": 2
+        },
+        {
+          "id": "r5-b2",
+          "label": "Cama doble 2",
+          "type": "double",
+          "capacity": 2
+        },
+        {
+          "id": "r5-b3",
+          "label": "Cama single 1",
+          "type": "single",
+          "capacity": 1
+        },
+        {
+          "id": "r5-b4",
+          "label": "Cama single 2",
+          "type": "single",
+          "capacity": 1
+        },
+        {
+          "id": "r5-b5",
+          "label": "Cama single 3",
+          "type": "single",
+          "capacity": 1
+        },
+        {
+          "id": "r5-b6",
+          "label": "Cama single 4",
+          "type": "single",
+          "capacity": 1
+        }
+      ]
+    },
+    {
+      "id": "r6",
+      "number": 6,
+      "name": "Cuarto #6",
+      "comfort": "Alta",
+      "location": "Piso 2",
+      "hiddenDetails": [
+        "comfort"
+      ],
+      "beds": [
+        {
+          "id": "r6-b1",
+          "label": "Cama doble 1",
+          "type": "double",
+          "capacity": 2
+        },
+        {
+          "id": "r6-b2",
+          "label": "Cama doble 2",
+          "type": "double",
+          "capacity": 2
+        },
+        {
+          "id": "r6-b3",
+          "label": "Cama single",
+          "type": "single",
+          "capacity": 1
+        }
+      ]
+    }
+  ],
+  "bathrooms": [
+    {
+      "id": "bathroom-74941230-815a-4b4a-b832-a847d3696c40",
+      "type": "Completo",
+      "location": "Piso 2"
+    },
+    {
+      "id": "bathroom-088e387d-81bd-4ff2-8dcb-83155a4d76bf",
+      "type": "Medio",
+      "location": "Area de Piscina"
+    },
+    {
+      "id": "bathroom-58c7722a-514c-4024-bf61-4a32dbd6d704",
+      "type": "Ducha",
+      "location": "Area de Piscina"
+    }
+  ],
+  "mealDays": [
+    {
+      "id": "meal-day-8f21a8f6-9079-458b-aaae-6481bf2461ec",
+      "name": "Viernes",
+      "meals": [
+        {
+          "id": "meal-248846b0-8194-4ad9-9932-1668068eef7d",
+          "name": "Snacks",
+          "items": [
+            {
+              "id": "meal-item-71b1b70e-5987-4044-bfcf-f7ad68d35f8f",
+              "name": "Ceviche"
+            }
+          ]
+        },
+        {
+          "id": "meal-721978db-b5c2-463e-a192-29da7d798b66",
+          "name": "Cena",
+          "items": [
+            {
+              "id": "meal-item-205a0fb4-24e0-4dd7-b16c-3b23e1401029",
+              "name": "Carne"
+            },
+            {
+              "id": "meal-item-8abe95ca-e944-4997-9447-007cded5cc62",
+              "name": "Costilla"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "meal-day-027e2acb-da0e-4894-9b03-4eb891dfe817",
+      "name": "Sabado",
+      "meals": [
+        {
+          "id": "meal-ec4a38fb-63b4-4d10-b56a-97a4d27b4d60",
+          "name": "Desayuno",
+          "items": [
+            {
+              "id": "meal-item-277f0364-9b7a-499f-82a6-dcb73f70fd74",
+              "name": "Pinto"
+            },
+            {
+              "id": "meal-item-31240172-354d-4c08-a508-48f22995aa28",
+              "name": "Cafecito"
+            },
+            {
+              "id": "meal-item-a5279c79-9683-4118-99f4-3754b3059198",
+              "name": "Jugo de Naranja"
+            }
+          ]
+        },
+        {
+          "id": "meal-6c256996-a1d4-430f-b5a5-08cd80c86552",
+          "name": "Almuerzo",
+          "items": [
+            {
+              "id": "meal-item-4714d040-14b8-4b68-9ce4-f1ebd1e41ffc",
+              "name": "Arroz con Pollo"
+            }
+          ]
+        },
+        {
+          "id": "meal-5095414f-18ce-4172-80f6-669539a1e4d2",
+          "name": "Snacks",
+          "items": [
+            {
+              "id": "meal-item-01c34bce-332f-4a87-9ac7-d21df2925039",
+              "name": "Picadillo de Platano"
+            },
+            {
+              "id": "meal-item-0c3da167-7805-4cc0-81a4-682820d61675",
+              "name": "Ceviche"
+            }
+          ]
+        },
+        {
+          "id": "meal-bd9417eb-e625-4932-8780-442364a6adf5",
+          "name": "Cena",
+          "items": [
+            {
+              "id": "meal-item-d21a799c-3868-42a3-adb9-afc7ab1e1566",
+              "name": "Chicharrones"
+            },
+            {
+              "id": "meal-item-7d347d46-b81a-484c-9394-3a144f8f566d",
+              "name": "Yuca"
+            },
+            {
+              "id": "meal-item-79dee5c7-16e5-4adc-8b43-81d91701641c",
+              "name": "Ensalada"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "meal-day-6006229c-3285-44ac-b35b-5687df5e2394",
+      "name": "Domingo",
+      "meals": [
+        {
+          "id": "meal-cdb387be-db4e-4dc9-a4cf-b949bcd5bbc3",
+          "name": "Desayuno",
+          "items": [
+            {
+              "id": "meal-item-e224fb70-0493-4088-94a1-3e0167f759b3",
+              "name": "Pinto"
+            },
+            {
+              "id": "meal-item-9102b81d-5fc1-45d1-8310-3024648d615c",
+              "name": "Cafecito"
+            },
+            {
+              "id": "meal-item-9e6c3245-5553-4c63-8d75-7ca0e53d3a42",
+              "name": "Jugo de Naranja"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "activities": [
+    {
+      "id": "activity-815dc9c5-f1d5-4715-aa12-a22fc8da2a12",
+      "name": "Juegos de Mesa",
+      "details": ""
+    },
+    {
+      "id": "activity-35a999d1-eb9e-45e4-84ab-27fa2e3d8780",
+      "name": "Piscina",
+      "details": ""
+    },
+    {
+      "id": "activity-9e980df5-41d8-48fd-abfe-147cb04188d1",
+      "name": "Karaoke",
+      "details": ""
+    },
+    {
+      "id": "activity-6be7ff7c-80ae-4950-af26-bc5cc31a9e86",
+      "name": "Parilladita",
+      "details": ""
+    },
+    {
+      "id": "activity-ba753f61-9cca-4601-a302-926015b23ffa",
+      "name": "DJ en Vivo (DJ Machete)",
+      "details": ""
+    }
+  ],
+  "showRoomDetails": true,
+  "customRoomFeatures": {
+    "r1": [
+      {
+        "id": "c964c9f3-22bb-4a6b-b4e5-f985e78e255a",
+        "label": "Baño",
+        "value": "Completo"
+      }
+    ],
+    "r2": [
+      {
+        "id": "ddbec7f2-04a9-44ed-86a4-3c4092ff3abb",
+        "label": "Baño",
+        "value": "Medio"
+      }
+    ],
+    "r3": [
+      {
+        "id": "ee7e4aa5-d2ae-4ff4-bf4c-4368b95c84ae",
+        "label": "Baño",
+        "value": "No"
+      }
+    ],
+    "r4": [
+      {
+        "id": "99aedd3e-4e70-460e-931d-5fa96a996c41",
+        "label": "Baño",
+        "value": "Completo"
+      }
+    ],
+    "r5": [
+      {
+        "id": "696ca7e6-ac4c-4600-a098-70a39dc4d6ee",
+        "label": "Baño",
+        "value": "No"
+      }
+    ],
+    "r6": [
+      {
+        "id": "dbc45236-29f8-44a2-9396-95227302e82a",
+        "label": "Baño",
+        "value": "No"
+      }
+    ]
+  },
+  "people": [
+    {
+      "id": "person-kath",
+      "name": "Kath",
+      "location": "r1-b1"
+    },
+    {
+      "id": "person-fake",
+      "name": "Fake",
+      "location": "r3-b1"
+    },
+    {
+      "id": "person-she",
+      "name": "She",
+      "location": "r3-b1"
+    },
+    {
+      "id": "person-fiorella",
+      "name": "Fiorella",
+      "location": "r2-b1"
+    },
+    {
+      "id": "person-sharon",
+      "name": "Sharon",
+      "location": "r2-b1"
+    },
+    {
+      "id": "person-walter",
+      "name": "Walter",
+      "location": "r4-b1"
+    },
+    {
+      "id": "person-dilana",
+      "name": "Dilana",
+      "location": "r4-b1"
+    },
+    {
+      "id": "person-pipo",
+      "name": "Pipo",
+      "location": "r4-b2"
+    },
+    {
+      "id": "person-monica",
+      "name": "Monica",
+      "location": "r4-b2"
+    },
+    {
+      "id": "person-warren",
+      "name": "Warren",
+      "location": "r5-b1"
+    },
+    {
+      "id": "person-solorzano",
+      "name": "Solorzano",
+      "location": "r5-b2"
+    },
+    {
+      "id": "person-jeff",
+      "name": "Jeff",
+      "location": "r5-b3"
+    },
+    {
+      "id": "person-rosale",
+      "name": "Rosales",
+      "location": "r5-b4"
+    },
+    {
+      "id": "person-kenneth",
+      "name": "Kenneth",
+      "location": "r5-b6"
+    },
+    {
+      "id": "person-chichi",
+      "name": "Chichi",
+      "location": "r6-b3"
+    },
+    {
+      "id": "person-cali",
+      "name": "Cali",
+      "location": "r6-b2"
+    },
+    {
+      "id": "person-pa",
+      "name": "Pa",
+      "location": "r6-b1"
+    }
+  ]
+}
