@@ -127,6 +127,8 @@
     body.read-only .detail-badge:hover { box-shadow: none; }
     body.read-only .edit-indicator { display: none; }
     body.read-only .edit-help { display: none !important; }
+    .admin-only { display: none !important; }
+    body.admin-requested .admin-only { display: inline-flex !important; }
 
     .app {
       width: min(1500px, calc(100% - 32px));
@@ -729,7 +731,7 @@
           <p class="edit-help">Las camas llenas se marcarán automáticamente.</p>
         </div>
         <div class="section-tools">
-          <button class="btn soft small" type="button" id="toggleReadOnly">Activar solo lectura</button>
+          <button class="btn soft small admin-only" type="button" id="toggleReadOnly">Desbloquear edición</button>
           <button class="btn soft small" type="button" id="toggleRoomDetails">Ocultar características</button>
           <div class="save-indicator" id="saveIndicator">✓ Guardado automáticamente</div>
         </div>
@@ -763,7 +765,7 @@
         <p class="edit-help">Crea días o secciones y agrega sus comidas.</p>
       </div>
       <div class="section-tools">
-        <button class="btn soft small" type="button" id="foodToggleReadOnly">Activar solo lectura</button>
+        <button class="btn soft small admin-only" type="button" id="foodToggleReadOnly">Desbloquear edición</button>
         <button class="btn soft small edit-only" type="button" id="foodExportData">↓ Exportar todo</button>
         <button class="btn soft small edit-only" type="button" id="foodImportData">↑ Importar</button>
         <button class="btn primary small edit-only" type="button" id="addMealDay">+ Agregar día o sección</button>
@@ -783,7 +785,7 @@
         <p class="edit-help">Por ejemplo: Juegos de Mesa, Karaoke, Piscina o cualquier otra actividad.</p>
       </div>
       <div class="section-tools">
-        <button class="btn soft small" type="button" id="activitiesToggleReadOnly">Activar solo lectura</button>
+        <button class="btn soft small admin-only" type="button" id="activitiesToggleReadOnly">Desbloquear edición</button>
         <button class="btn soft small edit-only" type="button" id="activitiesExportData">↓ Exportar todo</button>
         <button class="btn soft small edit-only" type="button" id="activitiesImportData">↑ Importar</button>
         <button class="btn primary small edit-only" type="button" id="addActivity">+ Agregar actividad</button>
@@ -800,6 +802,10 @@
 
       const STORAGE_KEY = 'airbnb-room-planner-v1';
       const BACKUP_KEY = 'airbnb-room-planner-before-import-v1';
+      const ADMIN_SESSION_KEY = 'fiesta-de-jeff-admin-session';
+      const ADMIN_PIN_HASH = '4c3570b9e5c9408db5b10c947626b270cb7e2e887b94e0f6599dd85ab606163e';
+      const adminRequested = new URLSearchParams(window.location.search).get('admin') === '1';
+      let adminUnlocked = adminRequested && sessionStorage.getItem(ADMIN_SESSION_KEY) === 'true';
       const DEFAULT_ROOMS = [
         { id: 'r1', number: 1, name: 'Cuarto #1', comfort: 'Baja', location: 'Mala', beds: [
           { id: 'r1-b1', label: 'Cama doble', type: 'double', capacity: 2 }
@@ -837,6 +843,8 @@
         ? 'food'
         : (window.location.hash === '#actividades' ? 'activities' : 'airbnb');
       let state = loadState();
+      state.readOnly = !adminUnlocked;
+      document.body.classList.toggle('admin-requested', adminRequested);
       let draggedPersonId = null;
       let selectedPersonId = null;
       let toastTimer = null;
@@ -1296,14 +1304,15 @@
         renderStats();
         document.body.classList.toggle('read-only', state.readOnly);
         document.body.classList.toggle('room-details-hidden', !state.showRoomDetails);
+        const modeButtonText = adminUnlocked ? 'Bloquear edición' : 'Desbloquear edición';
         const readOnlyButton = document.getElementById('toggleReadOnly');
-        readOnlyButton.textContent = state.readOnly ? 'Activar edición' : 'Activar solo lectura';
+        readOnlyButton.textContent = modeButtonText;
         readOnlyButton.setAttribute('aria-pressed', String(state.readOnly));
         const foodReadOnlyButton = document.getElementById('foodToggleReadOnly');
-        foodReadOnlyButton.textContent = state.readOnly ? 'Activar edición' : 'Activar solo lectura';
+        foodReadOnlyButton.textContent = modeButtonText;
         foodReadOnlyButton.setAttribute('aria-pressed', String(state.readOnly));
         const activitiesReadOnlyButton = document.getElementById('activitiesToggleReadOnly');
-        activitiesReadOnlyButton.textContent = state.readOnly ? 'Activar edición' : 'Activar solo lectura';
+        activitiesReadOnlyButton.textContent = modeButtonText;
         activitiesReadOnlyButton.setAttribute('aria-pressed', String(state.readOnly));
         document.getElementById('poolHelp').textContent = state.readOnly ? 'Personas que todavía no tienen una cama asignada.' : 'Arrastra desde aquí o toca un nombre y después una cama.';
         const detailsButton = document.getElementById('toggleRoomDetails');
@@ -1467,7 +1476,7 @@
           app: 'Fiesta de Jeff',
           version: 6,
           exportedAt: new Date().toISOString(),
-          readOnly: state.readOnly,
+          readOnly: true,
           rooms: state.rooms,
           bathrooms: state.bathrooms,
           mealDays: state.mealDays,
@@ -2004,6 +2013,7 @@
 
           localStorage.setItem(BACKUP_KEY, JSON.stringify(state));
           state = imported;
+          state.readOnly = !adminUnlocked;
           selectedPersonId = null;
           saveState();
           render();
@@ -2024,7 +2034,7 @@
           if (!response.ok) throw new Error(`HTTP ${response.status}`);
           const publishedData = JSON.parse(await response.text());
           const publishedState = normalizeImportedState(publishedData);
-          publishedState.readOnly = publishedData.readOnly === true;
+          publishedState.readOnly = !adminUnlocked;
           publishedState.showRoomDetails = publishedData.showRoomDetails !== false;
           state = publishedState;
           selectedPersonId = null;
@@ -2321,12 +2331,42 @@
         render();
       });
 
-      function toggleReadOnlyMode() {
-        state.readOnly = !state.readOnly;
+      async function hashAdminPin(pin) {
+        const bytes = new TextEncoder().encode(pin);
+        const digest = await window.crypto.subtle.digest('SHA-256', bytes);
+        return Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, '0')).join('');
+      }
+
+      async function requestAdminAccess() {
+        if (!adminRequested) return false;
+        const pin = window.prompt('Ingresa el PIN de administrador:');
+        if (pin === null) return false;
+        if (await hashAdminPin(pin.trim()) !== ADMIN_PIN_HASH) {
+          showToast('PIN incorrecto');
+          return false;
+        }
+        adminUnlocked = true;
+        sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
+        state.readOnly = false;
         selectedPersonId = null;
         saveState();
         render();
-        showToast(state.readOnly ? 'Modo solo lectura activado' : 'Modo edición activado');
+        showToast('Modo administrador activado');
+        return true;
+      }
+
+      async function toggleReadOnlyMode() {
+        if (!adminUnlocked) {
+          await requestAdminAccess();
+          return;
+        }
+        adminUnlocked = false;
+        sessionStorage.removeItem(ADMIN_SESSION_KEY);
+        state.readOnly = true;
+        selectedPersonId = null;
+        saveState();
+        render();
+        showToast('Modo edición bloqueado');
       }
 
       document.getElementById('toggleReadOnly').addEventListener('click', toggleReadOnlyMode);
@@ -2357,6 +2397,7 @@
           if (!backup) return;
           if (!confirm('¿Restaurar la distribución que tenías antes de la última importación?')) return;
           state = normalizeImportedState(JSON.parse(backup));
+          state.readOnly = !adminUnlocked;
           localStorage.removeItem(BACKUP_KEY);
           selectedPersonId = null;
           saveState();
@@ -2384,8 +2425,13 @@
         }
       });
 
-      render();
-      loadPublishedDistribution();
+      async function initializeApp() {
+        render();
+        await loadPublishedDistribution();
+        if (adminRequested && !adminUnlocked) await requestAdminAccess();
+      }
+
+      initializeApp();
     })();
   </script>
 </body>
