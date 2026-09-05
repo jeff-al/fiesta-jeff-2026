@@ -387,6 +387,28 @@
     .activities-hero { background: linear-gradient(135deg, #047857, #10b981); }
     .activities-hero p { color: #d1fae5; }
     .activities-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .activity-gifs {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .activity-gif {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1;
+      overflow: hidden;
+      border: 1px solid rgba(228, 231, 236, .9);
+      border-radius: 15px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+    .activity-gif img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
     .activity-card {
       padding: 16px;
       display: flex;
@@ -725,6 +747,7 @@
       .meal-group-head { align-items: flex-start; flex-direction: column; }
       .meal-group-head .meal-actions { width: 100%; justify-content: flex-end; }
       .activities-list { grid-template-columns: 1fr; }
+      .activity-gifs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .activity-card { align-items: stretch; flex-direction: column; }
       .panel { padding: 13px; border-radius: 15px; }
       .stats { gap: 5px; }
@@ -959,6 +982,14 @@
       </div>
     </div>
     <div class="activities-list" id="activitiesList"></div>
+    <section class="activity-gifs" aria-label="GIFs de la fiesta">
+      <div class="activity-gif"><img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHdxYm44Z21ucjNmOWIyMm8xczdwMTZ0eDVkbzhpNTR3N3UydGF1byZlcD12MV9naWZzX3NlYXJjaCZjdD1n/blSTtZehjAZ8I/giphy.gif" alt="GIF de celebración" loading="lazy" decoding="async"></div>
+      <div class="activity-gif"><img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHdxYm44Z21ucjNmOWIyMm8xczdwMTZ0eDVkbzhpNTR3N3UydGF1byZlcD12MV9naWZzX3NlYXJjaCZjdD1n/pX8pS6MIvtH7ues1Vq/giphy.gif" alt="GIF de celebración" loading="lazy" decoding="async"></div>
+      <div class="activity-gif"><img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHdxYm44Z21ucjNmOWIyMm8xczdwMTZ0eDVkbzhpNTR3N3UydGF1byZlcD12MV9naWZzX3NlYXJjaCZjdD1n/w5eFyOHmkS8uc/giphy.gif" alt="GIF de celebración" loading="lazy" decoding="async"></div>
+      <div class="activity-gif"><img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbzg4N2drbXoxbHh6MWZvcjM5MHVldHpsYXFzamMydzltb2tleWpkZCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/wpVM8uZMwThC0/giphy.gif" alt="GIF de celebración" loading="lazy" decoding="async"></div>
+      <div class="activity-gif"><img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDN5MTl3NDYxeGJvN2xiZTF4MHA3MThvdWtlaXc4cHhrdDZ2OXR3eCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/6ooG3oz8Xn9Wo/giphy.gif" alt="GIF de celebración" loading="lazy" decoding="async"></div>
+      <div class="activity-gif"><img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZDQ1dHhsYmtkcG9md3RrNmw1Yms4anNmMDFrcXB6NDNlODBvOWM0bCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/FbiL9rsmZN3ib2JSGo/giphy.gif" alt="GIF de celebración" loading="lazy" decoding="async"></div>
+    </section>
   </main>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
