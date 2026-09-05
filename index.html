@@ -633,6 +633,39 @@
       text-decoration: none;
       overflow-wrap: anywhere;
     }
+    .event-info-section {
+      grid-column: 1 / -1;
+      padding: 14px;
+      border: 1px solid rgba(228, 231, 236, .9);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .72);
+    }
+    .event-info-section h3 {
+      margin: 0 0 9px;
+      color: var(--ink);
+      font-size: 15px;
+    }
+    .event-info-section ul {
+      display: grid;
+      gap: 7px;
+      margin: 0;
+      padding-left: 20px;
+      color: var(--ink);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .event-info-section li::marker { color: var(--brand); }
+    .event-info-note {
+      grid-column: 1 / -1;
+      margin: 0;
+      padding: 13px 14px;
+      border-radius: 10px;
+      color: var(--brand-dark);
+      background: var(--brand-soft);
+      font-size: 14px;
+      font-weight: 750;
+      line-height: 1.5;
+    }
 
     @media (max-width: 1050px) {
       .app { grid-template-columns: 270px minmax(0, 1fr); }
@@ -764,10 +797,10 @@
       </div>
     </div>
     <nav class="tab-nav" role="tablist" aria-label="Secciones de la fiesta">
+      <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="infoTab" data-tab="info">ℹ️ Información general</button>
       <button class="tab-button active" type="button" role="tab" aria-selected="true" aria-controls="airbnbTab" data-tab="airbnb">🏠 Distribución Airbnb</button>
       <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="foodTab" data-tab="food">🍽️ Comidas</button>
       <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="activitiesTab" data-tab="activities">🎉 Actividades</button>
-      <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="infoTab" data-tab="info">ℹ️ Información general</button>
     </nav>
   </header>
 
@@ -856,6 +889,34 @@
         <div class="event-info-row"><strong>Cómo llegar</strong><a href="https://waze.com/ul/hd1ezfdhbd" target="_blank" rel="noopener noreferrer">Abrir ubicación en Waze</a></div>
         <div class="event-info-row"><strong>Aporte</strong><span>₡25.000 por persona</span></div>
         <div class="event-info-row"><strong>Importante</strong><span>Habrá alcohol de sobra, pero traigan sus bebidas individuales.</span></div>
+        <div class="event-info-row"><strong>Check in</strong><span>3:00 PM</span></div>
+        <div class="event-info-row"><strong>Check out</strong><span>11:00 AM</span></div>
+        <p class="event-info-note">Por favor, seamos ordenados y cuidemos las instalaciones como si fueran nuestras.</p>
+        <section class="event-info-section">
+          <h3>DENTRO DE LA CASA</h3>
+          <ul>
+            <li>No fumar dentro de las instalaciones.</li>
+            <li>No sentarse mojados en el sofá ni en las camas.</li>
+            <li>Música y bulla a volumen bajo a partir de las 10:00 PM. Si recibimos algún reporte relacionado con este punto, se aplicará una sanción económica de $200.</li>
+          </ul>
+        </section>
+        <section class="event-info-section">
+          <h3>PISCINA</h3>
+          <ul>
+            <li>No utilizar envases de vidrio en la zona de la piscina para evitar accidentes.</li>
+            <li>No comer ni beber dentro de la piscina.</li>
+            <li>Favor ducharse antes de ingresar a la piscina.</li>
+          </ul>
+        </section>
+        <section class="event-info-section">
+          <h3>CHECK IN - CHECK OUT</h3>
+          <ul>
+            <li>Para el check in, informar al anfitrión la hora de llegada para recibirles.</li>
+            <li>Para el check out, apagar todas las luces, el A/C y la TV al momento de salir. Si se dejan las luces o el A/C encendidos, o se extravían las llaves, se aplicará una sanción de $100.</li>
+            <li>Al salir, dejar las llaves en el cajón del mueble de madera junto a la puerta trasera, que es la entrada por la cochera.</li>
+            <li>Favor colocar la basura en el basurero correspondiente.</li>
+          </ul>
+        </section>
       </div>
     </section>
   </main>
