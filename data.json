@@ -1,8 +1,8 @@
 {
   "app": "Fiesta de Jeff",
   "version": 6,
-  "exportedAt": "2026-09-05T18:27:29.254Z",
-  "readOnly": false,
+  "exportedAt": "2026-09-05T19:08:21.179Z",
+  "readOnly": true,
   "rooms": [
     {
       "id": "r1",
@@ -196,6 +196,10 @@
             {
               "id": "meal-item-71b1b70e-5987-4044-bfcf-f7ad68d35f8f",
               "name": "Ceviche"
+            },
+            {
+              "id": "meal-item-afca5a43-b3ba-4be1-86e4-f3d199f96e2d",
+              "name": "Picadillo de Platano"
             }
           ]
         },
@@ -210,6 +214,18 @@
             {
               "id": "meal-item-8abe95ca-e944-4997-9447-007cded5cc62",
               "name": "Costilla"
+            },
+            {
+              "id": "meal-item-c5fd6c95-9e83-4257-8fb6-daa02354354a",
+              "name": "Pollo"
+            },
+            {
+              "id": "meal-item-bd8e76b4-f016-41c2-a77a-c546d3106908",
+              "name": "Salchichon"
+            },
+            {
+              "id": "meal-item-8fb94a96-94e2-4262-849d-5565fa9b60f3",
+              "name": "Pico de gallo"
             }
           ]
         }
@@ -244,6 +260,10 @@
             {
               "id": "meal-item-4714d040-14b8-4b68-9ce4-f1ebd1e41ffc",
               "name": "Arroz con Pollo"
+            },
+            {
+              "id": "meal-item-6bd66506-d4cb-4a7d-aa08-423db2d4862e",
+              "name": "Ensalada"
             }
           ]
         },
@@ -252,12 +272,12 @@
           "name": "Snacks",
           "items": [
             {
-              "id": "meal-item-01c34bce-332f-4a87-9ac7-d21df2925039",
-              "name": "Picadillo de Platano"
-            },
-            {
               "id": "meal-item-0c3da167-7805-4cc0-81a4-682820d61675",
               "name": "Ceviche"
+            },
+            {
+              "id": "meal-item-53745f91-8c8b-4f0a-898d-0fd9c43b846a",
+              "name": "Brownies"
             }
           ]
         },
@@ -330,6 +350,11 @@
     {
       "id": "activity-ba753f61-9cca-4601-a302-926015b23ffa",
       "name": "DJ en Vivo (DJ Machete)",
+      "details": ""
+    },
+    {
+      "id": "activity-03bad5ee-bffa-46f0-bfec-4336a291bc97",
+      "name": "Beber Guaro",
       "details": ""
     }
   ],
