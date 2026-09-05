@@ -1,7 +1,7 @@
 {
   "app": "Fiesta de Jeff",
   "version": 6,
-  "exportedAt": "2026-09-05T19:23:14.485Z",
+  "exportedAt": "2026-09-05T19:40:16.790Z",
   "readOnly": true,
   "rooms": [
     {
@@ -466,7 +466,7 @@
     {
       "id": "person-jeff",
       "name": "Jeff",
-      "location": "r5-b3"
+      "location": "r5-b5"
     },
     {
       "id": "person-rosale",
@@ -476,7 +476,7 @@
     {
       "id": "person-kenneth",
       "name": "Kenneth",
-      "location": "r5-b6"
+      "location": "r5-b3"
     },
     {
       "id": "person-chichi",

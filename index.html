@@ -797,14 +797,14 @@
       </div>
     </div>
     <nav class="tab-nav" role="tablist" aria-label="Secciones de la fiesta">
-      <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="infoTab" data-tab="info">ℹ️ Información general</button>
-      <button class="tab-button active" type="button" role="tab" aria-selected="true" aria-controls="airbnbTab" data-tab="airbnb">🏠 Distribución Airbnb</button>
+      <button class="tab-button active" type="button" role="tab" aria-selected="true" aria-controls="infoTab" data-tab="info">ℹ️ Información general</button>
+      <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="airbnbTab" data-tab="airbnb">🏠 Distribución Airbnb</button>
       <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="foodTab" data-tab="food">🍽️ Comidas</button>
       <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="activitiesTab" data-tab="activities">🎉 Actividades</button>
     </nav>
   </header>
 
-  <main class="app tab-panel active" id="airbnbTab" role="tabpanel">
+  <main class="app tab-panel" id="airbnbTab" role="tabpanel" hidden>
     <aside class="sidebar">
       <section class="panel edit-only">
         <h2 class="panel-title">Agregar personas</h2>
@@ -873,7 +873,7 @@
     </section>
   </main>
 
-  <main class="food-page tab-panel" id="infoTab" role="tabpanel" hidden>
+  <main class="food-page tab-panel active" id="infoTab" role="tabpanel">
     <section class="food-hero">
       <h2>ℹ️ Información general</h2>
       <p class="edit-help">Toda la información útil para llegar y participar en la fiesta.</p>
@@ -1006,10 +1006,12 @@
       const DEFAULT_MEAL_DAYS = [];
       const DEFAULT_ACTIVITIES = [];
 
-      let activeTab = window.location.hash === '#comidas'
+      let activeTab = !window.location.hash
+        ? 'info'
+        : (window.location.hash === '#comidas'
         ? 'food'
         : (window.location.hash === '#actividades' ? 'activities'
-          : (window.location.hash === '#informacion-general' ? 'info' : 'airbnb'));
+          : (window.location.hash === '#informacion-general' ? 'info' : 'airbnb')));
       let state = loadState();
       state.readOnly = !adminUnlocked;
       document.body.classList.toggle('admin-requested', adminRequested);
@@ -1284,7 +1286,7 @@
                   </div>
                 </div>
                 <div class="bed-people">
-                  ${occupants.length ? occupants.map(personHtml).join('') : '<div class="empty">Soltar persona aquí</div>'}
+                  ${occupants.length ? occupants.map(personHtml).join('') : `<div class="empty">${state.readOnly ? 'Vacío' : 'Soltar persona aquí'}</div>`}
                 </div>
               </div>`;
           }).join('');
