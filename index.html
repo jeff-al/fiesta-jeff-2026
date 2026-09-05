@@ -426,10 +426,31 @@
     .icon-btn:hover { color: var(--brand-dark); border-color: #b9a2ed; background: var(--brand-soft); }
     .icon-btn:disabled { opacity: .35; cursor: not-allowed; }
     .room-count { color: var(--muted); font-size: 12px; font-weight: 750; }
-    .badges { margin-top: 11px; display: flex; gap: 7px; flex-wrap: wrap; }
+    .badges {
+      margin-top: 11px;
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      width: fit-content;
+      max-width: 100%;
+      align-items: flex-start;
+    }
     body.room-details-hidden .badges { display: none; }
     body.room-details-hidden .room-head { min-height: auto; }
-    .badge { max-width: 100%; padding: 5px 8px; border-radius: 999px; font-size: 11px; font-weight: 800; overflow-wrap: anywhere; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      flex: 0 0 auto;
+      width: fit-content;
+      max-width: 100%;
+      padding: 5px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      overflow-wrap: anywhere;
+      white-space: normal;
+      align-self: flex-start;
+    }
     .badge.good { color: var(--good); background: var(--good-soft); }
     .badge.normal { color: var(--normal); background: var(--normal-soft); }
     .badge.bad { color: var(--bad); background: var(--bad-soft); }
@@ -440,6 +461,13 @@
       background: var(--good-soft);
     }
     .detail-badge { border: 0; cursor: pointer; }
+    .badge .edit-feature {
+      display: inline-flex;
+      align-items: center;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      text-align: left;
+    }
     .detail-badge:hover { box-shadow: inset 0 0 0 1px currentColor; }
     .edit-feature { border: 0; color: inherit; background: transparent; padding: 0; font: inherit; font-weight: inherit; cursor: pointer; }
     .remove-feature {
@@ -632,14 +660,25 @@
       .room-actions .room-count { margin-right: auto; align-self: center; }
       .icon-btn { width: 38px; height: 38px; }
       .badges { gap: 6px; }
-      .badge.custom { width: 100%; }
+      .badge,
+      .badge.custom,
+      .badge.detail-feature,
+      .badge.good,
+      .badge.normal,
+      .badge.bad,
+      .detail-badge {
+        width: fit-content;
+        max-width: 100%;
+        flex: 0 0 auto;
+      }
       .edit-feature { min-width: 0; flex: 1; overflow-wrap: anywhere; text-align: left; }
-      .add-feature { width: 100%; min-height: 38px; }
+      .add-feature { width: fit-content; min-height: 38px; }
       .beds { grid-template-columns: 1fr; }
       .bed { min-height: 102px; }
       .bed-action { width: 32px; height: 32px; }
       .capacity { padding-block: 6px; }
-      .person { min-height: 44px; padding-block: 9px; }
+      .person { min-height: 44px; padding-block: 9px; max-width: 100%; }
+      .bed .person { width: auto; }
       .remove-person, .edit-person { width: 27px; height: 27px; }
       .add-bed { min-height: 52px; }
       .toast { bottom: 14px; }
@@ -732,7 +771,7 @@
         </div>
         <div class="section-tools">
           <button class="btn soft small admin-only" type="button" id="toggleReadOnly">Desbloquear edición</button>
-          <button class="btn soft small" type="button" id="toggleRoomDetails">Ocultar características</button>
+          <button class="btn soft small admin-only" type="button" id="toggleRoomDetails">Ocultar características</button>
           <div class="save-indicator" id="saveIndicator">✓ Guardado automáticamente</div>
         </div>
       </div>
@@ -2028,7 +2067,7 @@
       async function loadPublishedDistribution() {
         if (window.location.protocol === 'file:') return;
         const indicator = document.getElementById('saveIndicator');
-        indicator.textContent = 'Cargando data.json…';
+        indicator.textContent = '';
         try {
           const response = await fetch('./data.json', { cache: 'no-store' });
           if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -2040,9 +2079,9 @@
           selectedPersonId = null;
           localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
           render();
-          indicator.textContent = '✓ Datos publicados cargados';
+          indicator.textContent = '';
         } catch (error) {
-          indicator.textContent = '⚠ Usando datos locales';
+          indicator.textContent = '';
           showToast('No se pudo cargar data.json; se muestran los datos guardados en este navegador');
           console.warn('No se pudo cargar data.json:', error);
         }
