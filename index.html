@@ -589,12 +589,58 @@
     }
     .selection-tip.show { display: block; }
 
+    .event-info {
+      margin: 0 0 18px;
+      padding: 16px 18px;
+      border: 1px solid rgba(228, 231, 236, .9);
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, #ffffff, #faf7ff);
+      box-shadow: var(--shadow);
+    }
+    .event-info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .event-info-row {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+      padding: 13px 14px;
+      border: 1px solid rgba(228, 231, 236, .9);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .72);
+      color: var(--ink);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .event-info strong {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .event-info a {
+      display: inline-flex;
+      width: fit-content;
+      max-width: 100%;
+      padding: 6px 10px;
+      border-radius: 8px;
+      color: var(--brand-dark);
+      background: var(--brand-soft);
+      font-weight: 800;
+      text-decoration: none;
+      overflow-wrap: anywhere;
+    }
+
     @media (max-width: 1050px) {
       .app { grid-template-columns: 270px minmax(0, 1fr); }
       .rooms-grid, .bathrooms-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 760px) {
       body { overflow-x: hidden; }
+      .event-info-grid { grid-template-columns: 1fr; }
       .topbar-inner { width: min(100% - 22px, 1500px); min-height: 66px; padding: 8px 0; gap: 8px; }
       .tab-nav { width: min(100% - 22px, 1500px); }
       .brand { min-width: 0; gap: 9px; }
@@ -721,6 +767,7 @@
       <button class="tab-button active" type="button" role="tab" aria-selected="true" aria-controls="airbnbTab" data-tab="airbnb">🏠 Distribución Airbnb</button>
       <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="foodTab" data-tab="food">🍽️ Comidas</button>
       <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="activitiesTab" data-tab="activities">🎉 Actividades</button>
+      <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="infoTab" data-tab="info">ℹ️ Información general</button>
     </nav>
   </header>
 
@@ -790,6 +837,26 @@
         </div>
         <div class="bathrooms-grid" id="bathroomsGrid"></div>
       </section>
+    </section>
+  </main>
+
+  <main class="food-page tab-panel" id="infoTab" role="tabpanel" hidden>
+    <section class="food-hero">
+      <h2>ℹ️ Información general</h2>
+      <p class="edit-help">Toda la información útil para llegar y participar en la fiesta.</p>
+    </section>
+    <div class="section-head">
+      <div>
+        <h2>Información general</h2>
+      </div>
+    </div>
+    <section class="event-info" aria-label="Información general de la fiesta">
+      <div class="event-info-grid">
+        <div class="event-info-row"><strong>Fechas</strong><span>11 al 13 de setiembre</span></div>
+        <div class="event-info-row"><strong>Cómo llegar</strong><a href="https://waze.com/ul/hd1ezfdhbd" target="_blank" rel="noopener noreferrer">Abrir ubicación en Waze</a></div>
+        <div class="event-info-row"><strong>Aporte</strong><span>₡25.000 por persona</span></div>
+        <div class="event-info-row"><strong>Importante</strong><span>Habrá alcohol de sobra, pero traigan sus bebidas individuales.</span></div>
+      </div>
     </section>
   </main>
 
@@ -880,7 +947,8 @@
 
       let activeTab = window.location.hash === '#comidas'
         ? 'food'
-        : (window.location.hash === '#actividades' ? 'activities' : 'airbnb');
+        : (window.location.hash === '#actividades' ? 'activities'
+          : (window.location.hash === '#informacion-general' ? 'info' : 'airbnb'));
       let state = loadState();
       state.readOnly = !adminUnlocked;
       document.body.classList.toggle('admin-requested', adminRequested);
@@ -1289,7 +1357,7 @@
       }
 
       function activateTab(tabName, updateHash = true) {
-        activeTab = ['food', 'activities'].includes(tabName) ? tabName : 'airbnb';
+        activeTab = ['food', 'activities', 'info'].includes(tabName) ? tabName : 'airbnb';
         document.body.classList.toggle('food-tab-active', activeTab !== 'airbnb');
         document.querySelectorAll('[data-tab]').forEach(button => {
           const isActive = button.dataset.tab === activeTab;
@@ -1299,21 +1367,30 @@
         const airbnbTab = document.getElementById('airbnbTab');
         const foodTab = document.getElementById('foodTab');
         const activitiesTab = document.getElementById('activitiesTab');
+        const infoTab = document.getElementById('infoTab');
         airbnbTab.classList.toggle('active', activeTab === 'airbnb');
         foodTab.classList.toggle('active', activeTab === 'food');
         activitiesTab.classList.toggle('active', activeTab === 'activities');
+        infoTab.classList.toggle('active', activeTab === 'info');
         airbnbTab.hidden = activeTab !== 'airbnb';
         foodTab.hidden = activeTab !== 'food';
         activitiesTab.hidden = activeTab !== 'activities';
+        infoTab.hidden = activeTab !== 'info';
         if (updateHash && window.history?.replaceState) {
-          const hash = activeTab === 'food' ? '#comidas' : (activeTab === 'activities' ? '#actividades' : '#airbnb');
+          const hash = activeTab === 'food'
+            ? '#comidas'
+            : (activeTab === 'activities'
+              ? '#actividades'
+              : (activeTab === 'info' ? '#informacion-general' : '#airbnb'));
           window.history.replaceState(null, '', hash);
         }
         document.getElementById('brandSubtitle').textContent = activeTab === 'food'
           ? (state.readOnly ? 'Menú en modo solo lectura' : 'Organiza el menú de la fiesta')
           : (activeTab === 'activities'
             ? (state.readOnly ? 'Actividades en modo solo lectura' : 'Organiza las actividades de la fiesta')
-            : (state.readOnly ? 'Distribución en modo solo lectura' : 'Arrastra cada persona hasta su cama'));
+            : (activeTab === 'info'
+              ? (state.readOnly ? 'Información general' : 'Información útil para llegar a la fiesta')
+              : (state.readOnly ? 'Distribución en modo solo lectura' : 'Arrastra cada persona hasta su cama')));
       }
 
       function renderPool() {

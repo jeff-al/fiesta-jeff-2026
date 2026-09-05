@@ -1,7 +1,7 @@
 {
   "app": "Fiesta de Jeff",
   "version": 6,
-  "exportedAt": "2026-09-05T19:08:21.179Z",
+  "exportedAt": "2026-09-05T19:23:14.485Z",
   "readOnly": true,
   "rooms": [
     {
@@ -278,6 +278,10 @@
             {
               "id": "meal-item-53745f91-8c8b-4f0a-898d-0fd9c43b846a",
               "name": "Brownies"
+            },
+            {
+              "id": "meal-item-b0fb0a3b-341c-48c0-8885-3df90ff89ed4",
+              "name": "Gomitas con Guaro"
             }
           ]
         },
